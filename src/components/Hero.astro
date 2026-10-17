@@ -1,11 +1,72 @@
 ---
-// STUB del esqueleto: lo completa la unidad 1 según docs/design/handoff.md §4 (Hero).
+/* Hero (docs/design/handoff.md §4). El nombre domina la primera lectura y es el LCP, por eso el H1
+   nunca lleva `.reveal`: tiene que pintarse con el primer render. Solo se revelan lede y redes.
+   Desde 64rem la pila la pinta el Stage en su columna; por debajo el Hero lleva su propio póster
+   bajo las redes, perezoso (handoff §1): es decorativo y no debe adelantarse al texto. */
 import Redes from './Redes.astro';
-import { perfil } from '../data/perfil';
+import { perfil, redes } from '../data/perfil';
 ---
 
 <section class="hero" aria-labelledby="nombre">
-  <h1 id="nombre" class="t-name">{perfil.nombre}</h1>
-  <p class="t-lede">{perfil.lede}</p>
-  <Redes label="Redes de Francisco" />
+  <h1 id="nombre" class="hero__nombre t-name">{perfil.nombre}</h1>
+  <p class="hero__lede t-lede reveal" style="--reveal-i:0">{perfil.lede}</p>
+  {/* Sin redes con URL no se pinta el envoltorio: así no queda un hueco de `--s-7` vacío. */}
+  {
+    redes.length > 0 && (
+      <div class="hero__redes reveal" style="--reveal-i:1">
+        <Redes label="Redes de Francisco" />
+      </div>
+    )
+  }
+  <picture class="hero__poster">
+    <source srcset="/poster/pila.avif" type="image/avif" />
+    <img src="/poster/pila.webp" width="960" height="960" alt="" loading="lazy" decoding="async" />
+  </picture>
 </section>
+
+<style>
+  .hero {
+    padding-top: var(--s-9);
+  }
+
+  /* `min-content` corta en cada espacio: nombre y apellido siempre en dos líneas, en todo ancho. */
+  .hero__nombre {
+    width: min-content;
+  }
+
+  .hero__lede {
+    margin-top: var(--s-5);
+  }
+
+  .hero__redes {
+    margin-top: var(--s-7);
+  }
+
+  .hero__poster {
+    display: block;
+    width: min(72vw, 360px);
+    margin-top: var(--s-7);
+  }
+
+  .hero__poster img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  @media (min-width: 64rem) {
+    /* El hero llena la primera pantalla junto con la cabecera (enlaces de 44 px + `--s-5` arriba y
+       abajo, ver Header.astro); con `100svh` a secas las redes quedarían pegadas al pliegue. */
+    .hero {
+      min-height: calc(100svh - (44px + 2 * var(--s-5)));
+      display: grid;
+      align-content: end;
+      padding-top: 0;
+      padding-bottom: var(--s-9);
+    }
+
+    .hero__poster {
+      display: none;
+    }
+  }
+</style>

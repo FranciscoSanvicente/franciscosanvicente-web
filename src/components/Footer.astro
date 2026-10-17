@@ -1,8 +1,29 @@
 ---
-// STUB del esqueleto: lo completa la unidad 1 según docs/design/handoff.md §4 (Footer).
+/* Pie (docs/design/handoff.md §4). Una regla de 1 px alineada con el contenido y una línea de
+   meta en `--ink4`: cierra la página sin competir con el contacto que tiene encima. */
 import { perfil, anioActual } from '../data/perfil';
 ---
 
 <footer class="container">
-  <p class="t-meta">© {anioActual} {perfil.nombre} · {perfil.ciudad}, {perfil.pais}</p>
+  <div class="footer">
+    <p class="footer__meta t-meta">
+      © {anioActual} {perfil.nombre} · <span class="footer__lugar">{perfil.ciudad}, {perfil.pais}</span>
+    </p>
+  </div>
 </footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--border);
+    padding-block: var(--s-6);
+  }
+
+  .footer__meta {
+    color: var(--ink4);
+  }
+
+  /* A 375 la línea parte en dos: que el lugar viaje entero y no deje "Venezuela" sola. */
+  .footer__lugar {
+    white-space: nowrap;
+  }
+</style>

@@ -1,11 +1,75 @@
 ---
-// STUB del esqueleto: lo completa la unidad 1 según docs/design/handoff.md §4 (Header).
+/* Cabecera (docs/design/handoff.md §4). No es sticky: la primera lectura es el nombre, no la
+   navegación. A la izquierda el lugar, como dato y no como enlace (se oculta en móvil para que el
+   nav no se apriete); a la derecha el nav a las tres anclas de la página, con área táctil de 44 px. */
+import { perfil } from '../data/perfil';
+
+const secciones = [
+  { href: '#sumari', texto: 'Sumari' },
+  { href: '#trayectoria', texto: 'Trayectoria' },
+  { href: '#contacto', texto: 'Contacto' },
+];
 ---
 
-<header class="container">
-  <nav aria-label="Secciones">
-    <a href="#sumari">Sumari</a>
-    <a href="#trayectoria">Trayectoria</a>
-    <a href="#contacto">Contacto</a>
+<header class="header container">
+  <p class="header__lugar eyebrow">{perfil.ciudad}, {perfil.paisCodigo}</p>
+  <nav class="header__nav" aria-label="Secciones">
+    <ul>
+      {
+        secciones.map((s) => (
+          <li>
+            <a href={s.href}>{s.texto}</a>
+          </li>
+        ))
+      }
+    </ul>
   </nav>
 </header>
+
+<style>
+  .header {
+    display: flex;
+    align-items: center;
+    gap: var(--s-5);
+    padding-block: var(--s-5);
+  }
+
+  .header__lugar {
+    display: none;
+  }
+
+  /* El margen automático deja el nav a la derecha también cuando el lugar está oculto y es el único hijo. */
+  .header__nav {
+    margin-inline-start: auto;
+  }
+
+  .header__nav ul {
+    display: flex;
+    gap: var(--s-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .header__nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--ink3);
+    text-decoration: none;
+    transition: color 160ms ease-out;
+  }
+
+  .header__nav a:hover {
+    color: var(--ink);
+  }
+
+  @media (min-width: 48rem) {
+    .header__lugar {
+      display: block;
+    }
+  }
+</style>
