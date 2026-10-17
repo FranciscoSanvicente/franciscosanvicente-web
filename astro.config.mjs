@@ -10,7 +10,8 @@ const site = process.env.SITE_URL ?? 'https://franciscosanvicente.com';
 export default defineConfig({
   site,
   trailingSlash: 'ignore',
-  integrations: [sitemap()],
+  // La tarjeta OG y la 404 no son páginas para Google.
+  integrations: [sitemap({ filter: (page) => !page.includes('/og-card') && !page.includes('/404') })],
   build: {
     // Carpeta estable para los assets con hash; `public/_headers` les da caché inmutable.
     assets: 'assets',
