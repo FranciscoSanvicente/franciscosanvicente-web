@@ -1,0 +1,10 @@
+# Cabeceras de Cloudflare Pages.
+# Los assets con hash de Astro no cambian nunca: caché de un año, inmutable.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=()

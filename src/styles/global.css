@@ -1,0 +1,147 @@
+/* Tokens de la web personal. Parten de los de Sumari (finance-app/web/src/styles/global.css)
+   para que ambas se sientan de la misma familia, con dos diferencias deliberadas:
+   - el ámbar solo marca lo que es Sumari (su bloque, su enlace, la placa superior del 3D);
+     los enlaces y acentos del resto se resuelven con tinta;
+   - mint y coral no existen aquí: en Sumari significan ganancia y pérdida.
+   El tema sigue al sistema; oscuro es el predeterminado. */
+
+:root {
+  color-scheme: dark;
+  --bg: #0b0c0e;
+  --surf: #14161a;
+  --surf2: #1d2024;
+  --border: #22252a;
+  --border2: #2a2e34;
+  --ink: #f8f9fb;
+  --ink2: #f2f3f5;
+  --ink3: #9aa0a6;
+  --ink4: #8a9099;
+  /* --amber es relleno; como color de letra va --amberText (en claro el relleno no pasa AA). */
+  --amber: #e7b857;
+  --amberText: #e7b857;
+  --focus: #e7b857;
+  --selection: rgba(231, 184, 87, 0.16);
+
+  --font-display: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  --font-body: 'Manrope Variable', system-ui, sans-serif;
+  --font-mono: 'Space Grotesk Variable', ui-monospace, sans-serif;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+    --bg: #f4f1ea;
+    --surf: #ffffff;
+    --surf2: #f7f4ed;
+    --border: #e5dfd3;
+    --border2: #d2c9b7;
+    --ink: #100e08;
+    --ink2: #17150f;
+    --ink3: #4f4a41;
+    --ink4: #66604f;
+    --amber: #c6851e;
+    --amberText: #8a5e06;
+    --focus: #8a5e06;
+    --selection: rgba(196, 142, 26, 0.22);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink2);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--ink);
+  text-decoration-color: var(--border2);
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  text-decoration-color: currentColor;
+}
+
+::selection {
+  background: var(--selection);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: var(--ink);
+  color: var(--bg);
+  font-weight: 700;
+  transform: translateY(-160%);
+  transition: transform 0.15s ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
