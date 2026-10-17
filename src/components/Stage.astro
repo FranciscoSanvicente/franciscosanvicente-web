@@ -5,7 +5,9 @@
    el póster queda fijo igual. Por debajo de 64rem la columna media se oculta y el Hero pinta su
    propio póster.
 
-   La parte media (póster, canvas y el script que carga la escena) la completa la unidad 7. */
+   La parte media es póster + canvas en la misma celda. El póster es el estado de reposo (sin JS,
+   sin capacidad, con movimiento reducido o tras el corte por rendimiento); el canvas solo aparece
+   si src/scripts/stack-loader.ts monta la escena, y entonces funde sobre el póster en 600 ms. */
 ---
 
 <div class="stage container">
@@ -14,7 +16,7 @@
     <div class="stage__frame">
       <picture class="stage__poster">
         <source srcset="/poster/pila.avif" type="image/avif" />
-        <img src="/poster/pila.webp" width="960" height="960" alt="" decoding="async" />
+        <img src="/poster/pila.webp" width="960" height="960" alt="" decoding="async" fetchpriority="low" />
       </picture>
       <canvas class="stage__canvas" hidden></canvas>
     </div>
@@ -64,5 +66,31 @@
       width: 100%;
       height: auto;
     }
+
+    /* Fundido de entrada (handoff §6): el canvas sube en 600 ms y el póster se apaga en la segunda
+       mitad, para que las dos imágenes no se lean superpuestas; al terminar el póster queda en
+       visibility:hidden (ocupa su sitio, no mueve el layout). Al salir no hay transición: el póster
+       vuelve en el mismo frame en que se oculta el canvas. */
+    /* Sin `display` propio: el atributo `hidden` debe seguir mandando. */
+    .stage__canvas {
+      opacity: 0;
+    }
+
+    .stage__canvas.is-live {
+      opacity: 1;
+      transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .stage__poster.is-covered {
+      opacity: 0;
+      visibility: hidden;
+      transition:
+        opacity 300ms ease-out 300ms,
+        visibility 0s linear 600ms;
+    }
   }
 </style>
+
+<script>
+  import '../scripts/stack-loader';
+</script>
