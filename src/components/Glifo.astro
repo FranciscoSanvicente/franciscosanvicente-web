@@ -1,0 +1,65 @@
+---
+/* Glifo de un hito (docs/design/handoff.md §4 Trayectoria): la pila de Sumari dibujada en 28 px.
+   Misma geometría que el favicon de Sumari (unidad 44 = ancho del chevron): línea base y tres
+   chevrons de semiángulo 24.4°, paso 17, trazo 9 redondeado. Las capas van de abajo arriba:
+   1 = base, 2 = chevron inferior, 3 = medio, 4 = superior, igual que las placas del 3D.
+
+   Las capas alcanzadas (≤ n) van en --ink3 y las que faltan en --border2. Desde el hito 3 la capa
+   superior alcanzada pasa a --amberText: es la placa de Sumari (§7, presupuesto de ámbar). */
+import type { Hito } from '../data/perfil';
+
+interface Props {
+  n: Hito['n'];
+}
+
+const { n } = Astro.props;
+
+const CAPAS = [
+  { capa: 1, d: 'M24 82 H76' },
+  { capa: 2, d: 'M28 66 L50 56 L72 66' },
+  { capa: 3, d: 'M28 49 L50 39 L72 49' },
+  { capa: 4, d: 'M28 32 L50 22 L72 32' },
+];
+
+const estado = (capa: number) => {
+  if (capa > n) return 'glifo__capa';
+  if (capa === n && n >= 3) return 'glifo__capa is-on is-sumari';
+  return 'glifo__capa is-on';
+};
+---
+
+<svg
+  class="glifo"
+  viewBox="15 17 70 70"
+  width="28"
+  height="28"
+  aria-hidden="true"
+  focusable="false"
+  fill="none"
+  stroke-width="9"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  {CAPAS.map(({ capa, d }) => <path class={estado(capa)} d={d} />)}
+</svg>
+
+<style>
+  .glifo {
+    display: block;
+    flex: none;
+    width: 28px;
+    height: 28px;
+  }
+
+  .glifo__capa {
+    stroke: var(--border2);
+  }
+
+  .glifo__capa.is-on {
+    stroke: var(--ink3);
+  }
+
+  .glifo__capa.is-sumari {
+    stroke: var(--amberText);
+  }
+</style>
