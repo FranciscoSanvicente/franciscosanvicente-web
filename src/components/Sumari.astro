@@ -1,13 +1,125 @@
 ---
-// STUB del esqueleto: lo completa la unidad 2 según docs/design/handoff.md §4 (Sumari).
+/* "Qué construyo" (docs/design/handoff.md §4, Sumari). Es la única superficie con relleno de la
+   página y la que se queda con el ámbar: el canto superior del bloque, el enlace y "total del día"
+   (§7). Nada más aquí lleva ámbar.
+
+   La suma se lee de dos maneras: a la vista, como una ecuación; para lectores de pantalla, como una
+   frase (la ecuación va con aria-hidden y una frase sr-only la sustituye). */
 import { sumari } from '../data/perfil';
+
+// La descripción de perfil.ts es una frase suelta ("App de…"); aquí sigue a "Sumari, una".
+const descripcion = sumari.descripcion.charAt(0).toLowerCase() + sumari.descripcion.slice(1);
 ---
 
 <section id="sumari" class="section" aria-labelledby="h-sumari">
-  <div class="section-head">
+  <div class="section-head reveal">
     <p class="eyebrow">capa 01</p>
     <h2 id="h-sumari" class="t-h2">Qué construyo</h2>
   </div>
-  <p class="t-body">{sumari.descripcion}</p>
-  <a href={sumari.url}>{sumari.urlVisible}</a>
+
+  <div class="sumari reveal" style="--reveal-i: 1">
+    <p class="t-body sumari__texto">
+      Estoy construyendo {sumari.nombre}, una {descripcion} La hago para la forma en que la gente en Venezuela
+      maneja de verdad su dinero.
+    </p>
+
+    <p class="sumari__sum">
+      <span class="sr-only">Bolívares, dólares, USDT y euros suman el total del día.</span>
+      {/* Dos grupos flexibles: las monedas y "= total del día", que baja de línea entero si no cabe.
+          Solo en pantallas muy estrechas se parte un grupo por dentro, antes que desbordar la placa.
+          Los espacios van explícitos porque la compresión de HTML de Astro se come los saltos de línea;
+          el de detrás de cada "+" no se parte, para que una moneda nunca quede sola en su línea. */}
+      <span class="t-figure sumari__ecuacion" aria-hidden="true">
+        <span class="sumari__grupo">
+          <abbr title="bolívares">Bs</abbr>{' '}<span class="sumari__op">+</span>{' '}${' '}
+          <span class="sumari__op">+</span>{' '}USDT{' '}<span class="sumari__op">+</span>{' '}€
+        </span>
+        <span class="sumari__grupo">
+          <span class="sumari__op">=</span>{' '}<span class="sumari__total">total del día</span>
+        </span>
+      </span>
+    </p>
+
+    <div class="sumari__pie">
+      <a class="link-arrow sumari__enlace" href={sumari.url}>
+        {sumari.urlVisible}<span class="arrow sumari__flecha" aria-hidden="true">↗</span>
+      </a>
+      <p class="t-meta">{sumari.estado}</p>
+    </div>
+  </div>
 </section>
+
+<style>
+  .sumari {
+    display: grid;
+    gap: var(--s-6);
+    padding: var(--s-6);
+    background: var(--surf);
+    border: 1px solid var(--border);
+    /* El canto de la placa: el único borde ámbar de la página. */
+    border-top: 2px solid var(--amber);
+    border-radius: 20px;
+  }
+
+  @media (min-width: 48rem) {
+    .sumari {
+      padding: var(--s-7);
+    }
+  }
+
+  .sumari__texto {
+    text-wrap: pretty;
+  }
+
+  .sumari__ecuacion {
+    display: flex;
+    flex-wrap: wrap;
+    /* El tamaño es el de .t-figure, que ya queda bajo el tope de 2.5rem del handoff (§2). */
+    gap: var(--s-2) 0.3em;
+  }
+
+  /* El <abbr> ya explica "Bs" al pasar el ratón; sin el punteado del navegador. */
+  .sumari__ecuacion abbr {
+    text-decoration: none;
+  }
+
+  .sumari__op {
+    color: var(--ink4);
+  }
+
+  .sumari__total {
+    color: var(--amberText);
+  }
+
+  .sumari__pie {
+    display: grid;
+    justify-items: start;
+    gap: var(--s-1);
+  }
+
+  /* inline-block (no flex) para que el subrayado no pase bajo la "↗"; el padding lleva el área
+     táctil por encima de 44 px sin cambiar el tamaño de letra. */
+  .sumari__enlace {
+    display: inline-block;
+    padding-block: var(--s-3);
+    font-weight: 600;
+    color: var(--amberText);
+    text-decoration-color: var(--amber);
+    text-decoration-thickness: 1px;
+    transition-property: text-decoration-color, text-decoration-thickness;
+  }
+
+  /* Separación con margen y no con un espacio, que quedaría subrayado entre el texto y la flecha. */
+  .sumari__flecha {
+    margin-inline-start: var(--s-1);
+  }
+
+  /* En oscuro --amber y --amberText son el mismo tono: el cambio de color no se vería, así que al
+     pasar el ratón también engorda el subrayado. El selector de arriba pesa más que el `a:hover`
+     global, por eso se repite aquí el paso a currentColor. */
+  .sumari__enlace:hover,
+  .sumari__enlace:focus-visible {
+    text-decoration-color: currentColor;
+    text-decoration-thickness: 2px;
+  }
+</style>
