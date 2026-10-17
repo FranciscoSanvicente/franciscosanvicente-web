@@ -5,17 +5,81 @@ import '@fontsource-variable/space-grotesk';
 import '../styles/global.css';
 // El nombre en Bricolage es el LCP: se precarga solo su archivo latino.
 import displayFont from '@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2?url';
+import { perfil, sumari, redes } from '../data/perfil';
 
 interface Props {
   title: string;
   description: string;
+  /** Imagen para compartir, desde la raíz pública. Debe ser PNG de 1200×630: así se declara en
+      og:image:type/width/height (la de por defecto la genera `pnpm og`). */
+  image?: string;
+  imageAlt?: string;
+  /** La home es el perfil de una persona; el resto de páginas, 'website'. */
+  ogType?: 'website' | 'profile';
+  /** Páginas que no deben aparecer en Google (404). Sin canónica, og:url ni JSON-LD: la 404 se
+      sirve en cualquier ruta, así que su URL de build (/404) no es la que se comparte. */
+  noindex?: boolean;
 }
-
-const { title, description } = Astro.props;
 
 // Canónica sin barra final, para que cada página tenga una sola URL.
 const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
-const canonicalURL = new URL(path, Astro.site).href;
+// `site` siempre viene de astro.config.mjs (SITE_URL o el dominio): sin él no hay URLs absolutas.
+const site = Astro.site!;
+const canonicalURL = new URL(path, site).href;
+
+const {
+  title,
+  description,
+  image = '/og/default.png',
+  // Solo la inicial del rol en minúscula: "Sumari" conserva su mayúscula.
+  imageAlt = `${perfil.nombre}, ${perfil.rol.charAt(0).toLowerCase()}${perfil.rol.slice(1)}. ${perfil.ciudad}, ${perfil.pais}.`,
+  ogType = path === '/' ? 'profile' : 'website',
+  noindex = false,
+} = Astro.props;
+
+// Las redes leen la imagen desde fuera: tiene que ser absoluta.
+const imageURL = new URL(image, site).href;
+const [nombrePila, ...apellidos] = perfil.nombre.split(' ');
+
+/* Datos estructurados: quién es Francisco y qué sitio es este, para que Google enlace la web con
+   sus redes (`sameAs`) en el panel de la persona. Todo sale de perfil.ts; una red sin URL ya viene
+   filtrada en `redes`, así que no llega aquí. */
+const personaId = `${site.href}#persona`;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': personaId,
+      name: perfil.nombre,
+      url: site.href,
+      jobTitle: perfil.rol,
+      description: perfil.bioCorta,
+      email: `mailto:${perfil.correo}`,
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: perfil.ciudad,
+        addressRegion: perfil.region,
+        addressCountry: perfil.paisCodigo,
+      },
+      worksFor: { '@type': 'Organization', name: sumari.nombre, url: sumari.url },
+      knowsAbout: ['Desarrollo web', 'Desarrollo de aplicaciones móviles', 'Finanzas personales'],
+      sameAs: redes.map((r) => r.url),
+      ...(perfil.foto ? { image: new URL(perfil.foto, site).href } : {}),
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${site.href}#web`,
+      url: site.href,
+      name: perfil.nombre,
+      inLanguage: 'es',
+      publisher: { '@id': personaId },
+      about: { '@id': personaId },
+    },
+  ],
+};
+// Los datos son estáticos del repo, pero se escapa `<` para que nada pueda cerrar el <script>.
+const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
 ---
 
 <!doctype html>
@@ -25,11 +89,41 @@ const canonicalURL = new URL(path, Astro.site).href;
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonicalURL} />
+    <meta name="author" content={perfil.nombre} />
+    {noindex ? <meta name="robots" content="noindex, nofollow" /> : <link rel="canonical" href={canonicalURL} />}
     <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
     <meta name="theme-color" content="#0B0C0E" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    {/* Open Graph (WhatsApp, LinkedIn, Facebook) y tarjeta de X. */}
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={perfil.nombre} />
+    <meta property="og:locale" content="es_VE" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {!noindex && <meta property="og:url" content={canonicalURL} />}
+    <meta property="og:image" content={imageURL} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+    {
+      ogType === 'profile' && (
+        <>
+          <meta property="profile:first_name" content={nombrePila} />
+          <meta property="profile:last_name" content={apellidos.join(' ')} />
+        </>
+      )
+    }
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageURL} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+
+    {!noindex && <script type="application/ld+json" set:html={jsonLdText} />}
+
     {/* `html.js` habilita lo que solo tiene sentido con JS (revelados, botón Copiar). Va en línea y
         antes de pintar para que no haya parpadeo. */}
     <script is:inline>document.documentElement.classList.add('js');</script>

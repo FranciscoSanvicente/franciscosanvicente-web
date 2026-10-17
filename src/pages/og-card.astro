@@ -1,0 +1,111 @@
+---
+/* Tarjeta Open Graph — superficie de captura, NO una página pública. Se renderiza a 1200×630 y
+   `pnpm og` (scripts/og.mjs) la fotografía en tema oscuro a `public/og/default.png`.
+   Va con noindex, sin canónica ni JSON-LD, y fuera del sitemap (astro.config.mjs).
+   Atemporal a propósito: las redes cachean la imagen semanas, así que no lleva fechas ni estados
+   que caduquen ("en desarrollo", "próximamente"). Todo el texto sale de perfil.ts. */
+import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource-variable/manrope';
+import '@fontsource-variable/space-grotesk';
+import '../styles/global.css';
+import { perfil } from '../data/perfil';
+
+const [nombrePila, ...apellidos] = perfil.nombre.split(' ');
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="viewport" content="width=1200" />
+    <title>OG · {perfil.nombre}</title>
+  </head>
+  <body>
+    <div class="card">
+      <p class="lugar">{perfil.ciudad}, {perfil.pais}</p>
+
+      <div class="pie">
+        <div>
+          <h1 class="nombre">{nombrePila}<br />{apellidos.join(' ')}</h1>
+          <p class="rol">{perfil.rol}</p>
+        </div>
+
+        {/* La pila del favicon y del póster (semiángulo 24.4°): base, dos chevrons y la placa
+            superior en ámbar, que es Sumari. */}
+        <svg class="pila" viewBox="0 0 100 100" width="380" height="380" fill="none" aria-hidden="true">
+          <g stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M24 84 H76" stroke="#4f535a"></path>
+            <path d="M28 68 L50 58 L72 68" stroke="#6b7078"></path>
+            <path d="M28 51 L50 41 L72 51" stroke="var(--ink3)"></path>
+            <path d="M28 34 L50 24 L72 34" stroke="var(--amber)"></path>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  html,
+  body {
+    width: 1200px;
+    height: 630px;
+    overflow: hidden;
+  }
+</style>
+
+<style>
+  .card {
+    width: 1200px;
+    height: 630px;
+    padding: var(--s-8) 72px;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    background: var(--bg);
+  }
+
+  /* Misma voz que el "Puerto Ordaz, VE" del header: mono, --ink4, sin mayúsculas. */
+  .lugar {
+    font-family: var(--font-mono);
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--ink4);
+  }
+
+  /* Como el hero: el nombre asentado abajo a la izquierda, nunca centrado. */
+  .pie {
+    align-self: end;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    column-gap: var(--s-8);
+  }
+
+  .nombre {
+    font-family: var(--font-display);
+    font-size: 148px;
+    font-weight: 600;
+    letter-spacing: -0.045em;
+    line-height: 0.92;
+    font-optical-sizing: auto;
+    color: var(--ink);
+  }
+
+  .rol {
+    margin-top: var(--s-6);
+    font-family: var(--font-body);
+    font-size: 34px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--ink2);
+  }
+
+  /* El trazo inferior de la base queda a la altura de la línea del rol. */
+  .pila {
+    display: block;
+    margin-right: -40px;
+    margin-bottom: -34px;
+  }
+</style>
