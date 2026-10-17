@@ -1,7 +1,15 @@
 ---
-// STUB del esqueleto: lo completa la unidad 4 según docs/design/handoff.md §4 (Contacto).
+/* Contacto (docs/design/handoff.md §4). El correo es el protagonista: grande y como `mailto:`, para
+   que funcione sin JS. El botón Copiar es una mejora: solo aparece con `html.js` y cuando su script
+   ya está escuchando, y anuncia el resultado en una región `aria-live`. "Descargar bio" no se pinta hasta que exista el archivo. */
 import Redes from './Redes.astro';
 import { perfil } from '../data/perfil';
+
+// `<wbr>` tras la @: si el correo no cabe en una línea (pantallas estrechas, letra ampliada),
+// parte por un sitio legible. Si el dato no trae @, se pinta entero.
+const arroba = perfil.correo.lastIndexOf('@');
+const usuario = arroba > 0 ? perfil.correo.slice(0, arroba + 1) : perfil.correo;
+const dominio = arroba > 0 ? perfil.correo.slice(arroba + 1) : '';
 ---
 
 <section id="contacto" class="section container" aria-labelledby="h-contacto">
@@ -9,6 +17,121 @@ import { perfil } from '../data/perfil';
     <p class="eyebrow">capa 04</p>
     <h2 id="h-contacto" class="t-h2">Contacto</h2>
   </div>
-  <a href={`mailto:${perfil.correo}`}>{perfil.correo}</a>
-  <Redes label="Redes de Francisco en contacto" />
+
+  <div class="contacto">
+    <p class="contacto__correo">
+      <a href={`mailto:${perfil.correo}`}>{usuario}<wbr />{dominio}</a>
+    </p>
+
+    <div class="contacto__copiar" hidden>
+      <button type="button" class="copiar" data-correo={perfil.correo}>
+        Copiar<span class="sr-only"> correo</span>
+      </button>
+      <p class="eyebrow copiar__estado" role="status" aria-live="polite"></p>
+    </div>
+
+    <Redes label="Redes de Francisco en contacto" />
+  </div>
 </section>
+
+<style>
+  .contacto {
+    display: grid;
+    justify-items: start;
+  }
+
+  .contacto__correo {
+    max-width: 100%;
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 0.6rem + 2.8vw, 3rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .contacto__correo a {
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+
+  /* Sin JS no hay nada que copiar: la fila entera queda oculta. El script quita `hidden` al
+     conectar el botón, así nunca se ve un botón que no responde. */
+  .contacto__copiar {
+    display: none;
+    align-items: center;
+    gap: var(--s-4);
+    margin-top: var(--s-4);
+  }
+
+  :global(html.js) .contacto__copiar:not([hidden]) {
+    display: flex;
+  }
+
+  /* Botón de texto, con el mismo lenguaje que los enlaces (mono, subrayado que se enciende). */
+  .copiar {
+    min-height: 44px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ink3);
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-color: var(--border2);
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+    transition-property: color, text-decoration-color;
+    transition-duration: 160ms;
+    transition-timing-function: ease-out;
+  }
+
+  .copiar:hover {
+    color: var(--ink);
+    text-decoration-color: currentColor;
+  }
+
+  /* Las redes cierran la sección, separadas del correo como un bloque aparte. */
+  .contacto > :global(.redes) {
+    margin-top: var(--s-7);
+  }
+</style>
+
+<script>
+  /* Copia el correo y anuncia el resultado. Si el portapapeles no existe (HTTP, navegador viejo) o
+     el permiso se niega, se dice que no se pudo y el `mailto:` sigue ahí. */
+  const ESPERA_MS = 4000;
+
+  for (const boton of document.querySelectorAll<HTMLButtonElement>('.copiar')) {
+    const estado = boton.parentElement?.querySelector<HTMLElement>('.copiar__estado');
+    const correo = boton.dataset.correo ?? '';
+    let limpiar: number | undefined;
+
+    boton.addEventListener('click', async () => {
+      if (!estado) return;
+      let mensaje: string;
+      try {
+        if (!navigator.clipboard) throw new Error('sin portapapeles');
+        await navigator.clipboard.writeText(correo);
+        mensaje = 'Copiado';
+      } catch {
+        mensaje = 'No se pudo copiar. Toca el correo para escribirme.';
+      }
+      // Vaciar antes de escribir hace que se anuncie de nuevo aunque el texto se repita.
+      estado.textContent = '';
+      window.clearTimeout(limpiar);
+      requestAnimationFrame(() => {
+        estado.textContent = mensaje;
+        // El borrado se programa aquí, después de escribir, para que nunca le gane al mensaje.
+        window.clearTimeout(limpiar);
+        limpiar = window.setTimeout(() => {
+          estado.textContent = '';
+        }, ESPERA_MS);
+      });
+    });
+
+    boton.parentElement?.removeAttribute('hidden');
+  }
+</script>
