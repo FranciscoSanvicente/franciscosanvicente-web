@@ -1,0 +1,14 @@
+---
+// STUB del esqueleto: lo completa la unidad 4 según docs/design/handoff.md §4 (Contacto).
+import Redes from './Redes.astro';
+import { perfil } from '../data/perfil';
+---
+
+<section id="contacto" class="section container" aria-labelledby="h-contacto">
+  <div class="section-head">
+    <p class="eyebrow">capa 04</p>
+    <h2 id="h-contacto" class="t-h2">Contacto</h2>
+  </div>
+  <a href={`mailto:${perfil.correo}`}>{perfil.correo}</a>
+  <Redes label="Redes de Francisco en contacto" />
+</section>

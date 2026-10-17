@@ -1,34 +1,32 @@
 ---
+/* Composición de la página de inicio. Cada sección vive en su componente; este archivo solo decide
+   el orden y qué secciones comparten el escenario del 3D (docs/design/handoff.md §1). */
 import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Stage from '../components/Stage.astro';
+import Hero from '../components/Hero.astro';
+import Sumari from '../components/Sumari.astro';
+import Trayectoria from '../components/Trayectoria.astro';
+import Principios from '../components/Principios.astro';
+import Contacto from '../components/Contacto.astro';
+import Footer from '../components/Footer.astro';
+import { perfil } from '../data/perfil';
 ---
 
-<Base
-  title="Francisco Sanvicente — Fundador de Sumari"
-  description="Francisco Sanvicente es desarrollador full stack y fundador de Sumari, la app de finanzas personales para quien maneja su dinero en varias monedas. Puerto Ordaz, Venezuela."
->
-  <main id="contenido" class="placeholder">
-    <h1>Francisco Sanvicente</h1>
-    <p>Fundador de Sumari. Construyo finanzas para quien vive en varias monedas.</p>
+<Base title={`${perfil.nombre} — ${perfil.rol}`} description={perfil.bioCorta}>
+  <Header />
+  <main id="contenido">
+    <Stage>
+      <Hero />
+      <Sumari />
+      <Trayectoria />
+    </Stage>
+    <Principios />
+    <Contacto />
   </main>
+  <Footer />
 </Base>
 
-<style>
-  /* Página provisional de la fase 0: solo comprueba fuentes, tokens y build.
-     La composición real llega en la fase 1. */
-  .placeholder {
-    min-height: 100dvh;
-    display: grid;
-    place-content: center;
-    gap: 1rem;
-    padding: 1.5rem;
-  }
-
-  h1 {
-    font-size: clamp(2.75rem, 9vw, 6.5rem);
-  }
-
-  p {
-    color: var(--ink3);
-    font-size: 1.125rem;
-  }
-</style>
+<script>
+  import '../scripts/reveal';
+</script>

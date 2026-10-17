@@ -12,18 +12,28 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "test": "node scripts/verify.mjs",
+    "shots": "node scripts/shot.mjs",
     "astro": "astro"
   },
   "dependencies": {
     "@fontsource-variable/bricolage-grotesque": "5.3.0",
     "@fontsource-variable/manrope": "5.3.0",
     "@fontsource-variable/space-grotesk": "5.3.0",
-    "astro": "7.3.8"
+    "astro": "7.3.8",
+    "three": "0.186.1"
   },
   "devDependencies": {
-    "@astrojs/sitemap": "3.7.4"
+    "@astrojs/sitemap": "3.7.4",
+    "@axe-core/playwright": "4.13.0",
+    "@types/three": "0.186.0",
+    "playwright": "1.63.0",
+    "sharp": "0.35.5"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild", "sharp"]
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
   }
 }

@@ -1,0 +1,23 @@
+---
+// STUB del esqueleto: lo completa la unidad 3 según docs/design/handoff.md §4 (Trayectoria).
+// Contrato DOM que lee el cargador 3D: `#trayectoria [data-hito="1".."4"]`.
+import { hitos } from '../data/perfil';
+---
+
+<section id="trayectoria" class="section" aria-labelledby="h-trayectoria">
+  <div class="section-head">
+    <p class="eyebrow">capa 02</p>
+    <h2 id="h-trayectoria" class="t-h2">Trayectoria</h2>
+  </div>
+  <ol class="hitos">
+    {
+      hitos.map((h) => (
+        <li class="hito" data-hito={h.n}>
+          <p class="t-figure">{h.anio}</p>
+          <h3 class="t-h3">{h.titulo}</h3>
+          {h.detalle && <p class="t-body">{h.detalle}</p>}
+        </li>
+      ))
+    }
+  </ol>
+</section>

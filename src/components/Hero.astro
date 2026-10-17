@@ -1,0 +1,11 @@
+---
+// STUB del esqueleto: lo completa la unidad 1 según docs/design/handoff.md §4 (Hero).
+import Redes from './Redes.astro';
+import { perfil } from '../data/perfil';
+---
+
+<section class="hero" aria-labelledby="nombre">
+  <h1 id="nombre" class="t-name">{perfil.nombre}</h1>
+  <p class="t-lede">{perfil.lede}</p>
+  <Redes label="Redes de Francisco" />
+</section>

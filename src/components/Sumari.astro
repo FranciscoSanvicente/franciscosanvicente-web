@@ -1,0 +1,13 @@
+---
+// STUB del esqueleto: lo completa la unidad 2 según docs/design/handoff.md §4 (Sumari).
+import { sumari } from '../data/perfil';
+---
+
+<section id="sumari" class="section" aria-labelledby="h-sumari">
+  <div class="section-head">
+    <p class="eyebrow">capa 01</p>
+    <h2 id="h-sumari" class="t-h2">Qué construyo</h2>
+  </div>
+  <p class="t-body">{sumari.descripcion}</p>
+  <a href={sumari.url}>{sumari.urlVisible}</a>
+</section>

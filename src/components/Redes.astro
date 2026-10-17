@@ -1,0 +1,47 @@
+---
+/* Lista de redes compartida por Hero y Contacto. Solo pinta las que tienen URL; si no hay ninguna,
+   no pinta nada (nunca un `href="#"`). */
+import { redes } from '../data/perfil';
+
+interface Props {
+  /** Nombre accesible de la lista, distinto en cada sección. */
+  label?: string;
+}
+
+const { label = 'Redes' } = Astro.props;
+---
+
+{
+  redes.length > 0 && (
+    <ul class="redes" aria-label={label}>
+      {redes.map((red) => (
+        <li>
+          <a class="link-arrow" href={red.url} rel="me">
+            {red.nombre} <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  .redes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2) var(--s-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .redes a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-1);
+    min-height: 44px;
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+</style>
