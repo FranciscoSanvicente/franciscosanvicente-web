@@ -1,7 +1,13 @@
 ---
-// STUB del esqueleto: lo completa la unidad 3 según docs/design/handoff.md §4 (Trayectoria).
-// Contrato DOM que lee el cargador 3D: `#trayectoria [data-hito="1".."4"]`.
+/* Trayectoria (docs/design/handoff.md §4 y §6). Cuatro hitos que son las cuatro capas de la pila:
+   el hito 1 es la base y el 4 la placa superior. Desde 64rem cada hito ocupa 72svh para que la
+   pila sticky de la derecha encaje una placa por hito con el scroll nativo; por debajo no hay 3D y
+   cada glifo dibuja cuántas capas lleva puestas.
+
+   Contrato DOM que lee el cargador 3D: `#trayectoria [data-hito="1".."4"]`. No cambiar el id ni
+   esos atributos. */
 import { hitos } from '../data/perfil';
+import Glifo from './Glifo.astro';
 ---
 
 <section id="trayectoria" class="section" aria-labelledby="h-trayectoria">
@@ -13,11 +19,112 @@ import { hitos } from '../data/perfil';
     {
       hitos.map((h) => (
         <li class="hito" data-hito={h.n}>
-          <p class="t-figure">{h.anio}</p>
-          <h3 class="t-h3">{h.titulo}</h3>
-          {h.detalle && <p class="t-body">{h.detalle}</p>}
+          <div class="hito__marca">
+            <Glifo n={h.n} />
+            <p class="t-figure">{h.anio}</p>
+          </div>
+          <h3 class="t-h3 hito__titulo">{h.titulo}</h3>
+          {h.detalle && <p class="t-body hito__detalle">{h.detalle}</p>}
         </li>
       ))
     }
   </ol>
 </section>
+
+<style>
+  .hitos {
+    display: grid;
+    gap: var(--s-8);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .hito__marca {
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+  }
+
+  .hito__titulo {
+    margin-top: var(--s-5);
+  }
+
+  .hito__detalle {
+    margin-top: var(--s-3);
+    color: var(--ink3);
+    text-wrap: pretty;
+  }
+
+  /* Hito activo: con JS el título del hito activo va en --ink y el resto en --ink3. Lo habilita
+     `data-spy`, que pone el propio script al arrancar (no `html.js`): si el script no carga o no
+     hay IntersectionObserver, todos los títulos quedan en --ink (el color base de .t-h3), igual que
+     sin JS. Solo cambia el color, así que con movimiento reducido se mantiene (global.css acorta
+     la transición). */
+  .hitos[data-spy] .hito__titulo {
+    color: var(--ink3);
+    transition: color 240ms ease-out;
+  }
+
+  .hitos[data-spy] .hito[data-active] .hito__titulo {
+    color: var(--ink);
+  }
+
+  /* Coreografía con la pila: un hito por placa y aire al final para que la cámara termine de
+     girar a frontal con el sticky todavía en pantalla. Los hitos van pegados (sin gap) para que
+     el progreso de uno empiece donde acaba el anterior. */
+  @media (min-width: 64rem) {
+    section {
+      padding-bottom: 40svh;
+    }
+
+    .hitos {
+      gap: 0;
+    }
+
+    .hito {
+      min-height: 72svh;
+    }
+  }
+</style>
+
+<script>
+  /* Marca `data-active` en el hito con progreso ≥ 0.5, con la misma fórmula que usa la pila 3D
+     para encajar cada placa (docs/design/handoff.md §5):
+       pᵢ = clamp((0.6·vh − top) / alto, 0, 1)
+     Activo = el último hito con pᵢ ≥ 0.5, es decir, el último cuyo punto medio ya cruzó la línea
+     del 60 % del viewport. Uno solo a la vez; ninguno mientras el primero no llega.
+
+     El observer recorta la raíz a la franja [0, 0.6·vh]: un hito cruza pᵢ = 0.5 justo cuando la
+     mitad de su alto queda dentro de esa franja, así que el umbral 0.5 dispara en ese instante (el
+     umbral 0 cubre entrar y salir de la franja). Cada aviso recalcula los cuatro desde sus
+     rectángulos, de modo que un salto de ancla no deja un activo viejo en pantalla. */
+  const lista = document.querySelector<HTMLElement>('#trayectoria .hitos');
+  const hitos = Array.from(document.querySelectorAll<HTMLElement>('#trayectoria [data-hito]'));
+
+  function progreso(hito: HTMLElement, vh: number) {
+    const { top, height } = hito.getBoundingClientRect();
+    return height > 0 ? Math.min(Math.max((0.6 * vh - top) / height, 0), 1) : 0;
+  }
+
+  function actualizar() {
+    const vh = window.innerHeight;
+    let activo: HTMLElement | undefined;
+    for (const hito of hitos) {
+      if (progreso(hito, vh) >= 0.5) activo = hito;
+    }
+    for (const hito of hitos) {
+      if (hito === activo) hito.setAttribute('data-active', '');
+      else hito.removeAttribute('data-active');
+    }
+  }
+
+  if (lista && hitos.length && 'IntersectionObserver' in window) {
+    lista.setAttribute('data-spy', '');
+    const io = new IntersectionObserver(actualizar, { rootMargin: '0px 0px -40% 0px', threshold: [0, 0.5] });
+    hitos.forEach((hito) => io.observe(hito));
+    // Si cambia el alto del viewport (barra del navegador en móvil) la línea del 60 % se mueve sin
+    // que ningún hito cruce un umbral.
+    window.addEventListener('resize', actualizar, { passive: true });
+  }
+</script>

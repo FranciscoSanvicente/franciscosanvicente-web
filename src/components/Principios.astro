@@ -1,10 +1,95 @@
 ---
-// STUB del esqueleto: lo completa la unidad 4 según docs/design/handoff.md §4 (Principios).
+/* "Cómo pienso" (docs/design/handoff.md §4, Principios). Tres posiciones de Francisco como dueño
+   de Sumari, sacadas de los principios ya documentados del producto. Viven aquí y no en
+   src/data/perfil.ts porque solo esta sección las pinta. */
+
+interface Posicion {
+  /** Índice visible: capa 03 → 3.1, 3.2, 3.3. */
+  indice: string;
+  afirmacion: string;
+  detalle: string;
+}
+
+const POSICIONES: Posicion[] = [
+  {
+    indice: '3.1',
+    afirmacion: 'Cada número tiene que decir de dónde sale.',
+    detalle:
+      'En Sumari cada tasa lleva su nombre real: BCV, Euro BCV, USDT P2P. Si el asistente no tiene el dato, lo dice; no lo inventa.',
+  },
+  {
+    indice: '3.2',
+    afirmacion: 'Lo privado se procesa en tu teléfono.',
+    detalle:
+      'El audio y la foto del comprobante no salen de ahí; a la IA solo viaja el texto. Y no se venden los datos de nadie.',
+  },
+  {
+    indice: '3.3',
+    afirmacion: 'Construyo para las cuentas que de verdad se hacen en Venezuela.',
+    detalle:
+      'Bolívares en el banco, dólares en efectivo, USDT y a veces euros. Sumari anota ese dinero y lo suma a la tasa del día; no lo mueve ni promete rendimientos.',
+  },
+];
 ---
 
 <section id="principios" class="section container" aria-labelledby="h-principios">
-  <div class="section-head">
-    <p class="eyebrow">capa 03</p>
-    <h2 id="h-principios" class="t-h2">Cómo pienso</h2>
+  <div class="principios grid">
+    <div class="section-head principios__head">
+      <p class="eyebrow">capa 03</p>
+      <h2 id="h-principios" class="t-h2">Cómo pienso</h2>
+    </div>
+
+    <ol class="principios__lista" role="list">
+      {
+        POSICIONES.map((p, i) => (
+          <li class="posicion reveal" style={`--reveal-i: ${i}`}>
+            <p class="eyebrow">{p.indice}</p>
+            <h3 class="t-statement">{p.afirmacion}</h3>
+            <p class="t-body posicion__detalle">{p.detalle}</p>
+          </li>
+        ))
+      }
+    </ol>
   </div>
 </section>
+
+<style>
+  /* Móvil y tableta: una sola columna, cabecera encima de la lista. */
+  .principios__head,
+  .principios__lista {
+    grid-column: 1 / -1;
+  }
+
+  .principios__lista {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .posicion {
+    display: grid;
+    gap: var(--s-3);
+    padding-block: var(--s-6);
+    border-top: 1px solid var(--border);
+  }
+
+  .posicion__detalle {
+    color: var(--ink3);
+    text-wrap: pretty;
+  }
+
+  /* Escritorio: cabecera fija en las columnas 1–4 mientras la lista corre en 6–12. */
+  @media (min-width: 64rem) {
+    .principios__head {
+      grid-column: 1 / span 4;
+      align-self: start;
+      position: sticky;
+      top: var(--s-9);
+      margin-bottom: 0;
+    }
+
+    .principios__lista {
+      grid-column: 6 / -1;
+    }
+  }
+</style>

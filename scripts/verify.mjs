@@ -1,6 +1,7 @@
 /* Comprobaciones sobre el HTML generado (`pnpm build && pnpm test`). Sin dependencias: lee
-   dist/index.html y falla con código 1 si algo de lo que sostiene el SEO de persona se rompe. */
-import { readFile } from 'node:fs/promises';
+   dist/ (home, 404, og-card, sitemap) y falla con código 1 si algo de lo que sostiene el SEO de
+   persona se rompe. */
+import { access, readFile } from 'node:fs/promises';
 
 const html = await readFile(new URL('../dist/index.html', import.meta.url), 'utf8');
 const fallos = [];
@@ -32,8 +33,57 @@ for (const n of [1, 2, 3, 4]) {
 check(!/href="#"/.test(html), 'hay un enlace vacío href="#"');
 check(!/\bTODO\b/.test(visible), 'hay un TODO visible en el texto de la página');
 
+// ── Capa SEO: Open Graph, tarjeta de X, JSON-LD, noindex y sitemap ─────────────────────────────
+const meta = (attr, name) =>
+  html.match(new RegExp(`<meta ${attr}="${name.replace(/[.:]/g, '\\$&')}" content="([^"]*)"`))?.[1];
+for (const p of ['og:title', 'og:description', 'og:url', 'og:image']) {
+  check(meta('property', p), `falta <meta property="${p}">`);
+}
+check(/^https:\/\//.test(meta('property', 'og:image') ?? ''), 'og:image no es una URL absoluta https');
+check(meta('name', 'twitter:card') === 'summary_large_image', 'falta twitter:card summary_large_image');
+
+const bloquesLd = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+check(bloquesLd.length === 1, `debe haber un solo bloque JSON-LD y hay ${bloquesLd.length}`);
+let grafo = [];
+try {
+  const ld = JSON.parse(bloquesLd[0]?.[1] ?? '');
+  grafo = ld['@graph'] ?? [ld];
+} catch (e) {
+  check(false, `el JSON-LD no se puede parsear: ${e.message}`);
+}
+const persona = grafo.find((n) => n['@type'] === 'Person');
+check(persona?.name === 'Francisco Sanvicente', 'el JSON-LD no tiene un Person "Francisco Sanvicente"');
+check(Array.isArray(persona?.sameAs) && persona.sameAs.length > 0, 'el Person no tiene sameAs');
+check((persona?.sameAs ?? []).every((u) => /^https:\/\//.test(u)), 'hay un sameAs que no es https');
+check(grafo.some((n) => n['@type'] === 'WebSite'), 'el JSON-LD no tiene un WebSite');
+
+const leer = async (...rutas) => {
+  for (const r of rutas) {
+    try {
+      return await readFile(new URL(`../${r}`, import.meta.url), 'utf8');
+    } catch {
+      /* probamos la siguiente */
+    }
+  }
+  return null;
+};
+const noindex = (doc) => /<meta name="robots" content="noindex/.test(doc ?? '');
+
+const ogCard = await leer('dist/og-card/index.html', 'dist/og-card.html');
+check(ogCard !== null, 'no se generó la página /og-card');
+check(noindex(ogCard), '/og-card no lleva noindex');
+const nf = await leer('dist/404.html');
+check(nf !== null, 'no se generó dist/404.html');
+check(noindex(nf), 'la 404 no lleva noindex');
+check(!/application\/ld\+json/.test((ogCard ?? '') + (nf ?? '')), 'og-card o 404 llevan JSON-LD');
+const sitemap = await leer('dist/sitemap-0.xml');
+check(sitemap !== null, 'no se generó dist/sitemap-0.xml');
+check(!/og-card|\/404/.test(sitemap ?? ''),'el sitemap incluye og-card o la 404');
+const existe = (r) => access(new URL(`../${r}`, import.meta.url)).then(() => true, () => false);
+check(await existe('public/og/default.png'), 'falta public/og/default.png (pnpm og)');
+
 if (fallos.length) {
   console.error(`✗ ${fallos.length} comprobación(es) fallaron:\n  - ${fallos.join('\n  - ')}`);
   process.exit(1);
 }
-console.log('✓ dist/index.html pasa las comprobaciones');
+console.log('✓ dist pasa las comprobaciones');

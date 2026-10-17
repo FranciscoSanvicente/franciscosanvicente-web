@@ -1,0 +1,100 @@
+---
+/* Página 404. Cloudflare Pages la sirve para cualquier ruta que no exista. Con noindex: no debe
+   competir con la home en Google. No usa el Header de la home porque sus anclas (#sumari…) aquí
+   no llevan a ningún lado; un solo enlace devuelve al inicio. */
+import Base from '../layouts/Base.astro';
+import Footer from '../components/Footer.astro';
+import { perfil } from '../data/perfil';
+---
+
+<Base
+  title={`Página no encontrada — ${perfil.nombre}`}
+  description={`Esta dirección no existe en la web de ${perfil.nombre}.`}
+  noindex
+>
+  <header class="container nf-top">
+    <a class="eyebrow nf-home" href="/">{perfil.nombre}</a>
+  </header>
+
+  <main id="contenido" class="container nf">
+    {/* La pila del favicon con la placa superior por poner: la capa que se buscaba no está. */}
+    <svg class="nf-pila" viewBox="0 0 100 100" width="96" height="96" fill="none" aria-hidden="true">
+      <g stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M24 84 H76" stroke="var(--ink4)"></path>
+        <path d="M28 68 L50 58 L72 68" stroke="var(--ink4)"></path>
+        <path d="M28 51 L50 41 L72 51" stroke="var(--ink4)"></path>
+        <path
+          d="M28 34 L50 24 L72 34"
+          stroke="var(--ink4)"
+          stroke-width="2.5"
+          stroke-linecap="butt"
+          stroke-dasharray="5 4"
+        ></path>
+      </g>
+    </svg>
+
+    <p class="eyebrow nf-code">error 404</p>
+    <h1 class="t-h2">Esta página no existe</h1>
+    <p class="t-body nf-texto">
+      Puede que el enlace esté mal escrito o que la página ya no esté. Todo lo que hay está en la
+      página de inicio.
+    </p>
+    <p class="t-lede nf-accion"><a href="/">Volver al inicio</a></p>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .nf-top {
+    padding-block: var(--s-5);
+  }
+
+  /* Área táctil de 44 px sin agrandar el texto. */
+  .nf-home {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--ink3);
+    text-decoration: none;
+  }
+
+  .nf-home:hover {
+    color: var(--ink);
+  }
+
+  /* Como el hero: el contenido asentado abajo a la izquierda, no centrado. */
+  .nf {
+    min-height: 70svh;
+    display: grid;
+    align-content: end;
+    justify-items: start;
+    padding-block: var(--s-9);
+  }
+
+  .nf-pila {
+    margin-left: -12px;
+    margin-bottom: var(--s-6);
+  }
+
+  .nf-code {
+    margin-bottom: var(--s-3);
+  }
+
+  .nf-texto {
+    margin-top: var(--s-5);
+    color: var(--ink3);
+  }
+
+  .nf-accion {
+    margin-top: var(--s-7);
+  }
+
+  /* Área táctil de 44 px: el texto mide entre 27 y 34 px de alto según el ancho. */
+  .nf-accion a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 600;
+  }
+</style>
