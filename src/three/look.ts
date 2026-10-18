@@ -30,13 +30,21 @@ export const grafito = () => new MeshStandardMaterial({ color: 0x23262b, roughne
 export const canto = () =>
   new MeshStandardMaterial({ color: APAGADO.clone(), emissive: AMBAR.dark.clone(), roughness: 0.4, metalness: 0 });
 
-/** Aplica el nivel de emisión `e` (0 apagado … 1 encendido, ya con easing) al canto. */
-export function encender(material: MeshStandardMaterial, e: number, tema: StackTheme) {
-  material.color.lerpColors(APAGADO, NEGRO, e);
-  material.emissive.copy(AMBAR[tema]);
-  material.emissiveIntensity = e;
+/* Tinta: el canto del servicio activo. La placa siempre es grafito, así que el mismo casi-blanco
+   funciona en los dos temas; a 0.6 se distingue del ámbar sin competir con él. */
+const TINTA = new Color(0xf8f9fb);
+const TINTA_NIVEL = 0.6;
+const mezcla = new Color();
+
+/** Canto con ámbar `e` y tinta `t` (0 … 1, ya con easing). El ámbar manda si coinciden. */
+export function encender(material: MeshStandardMaterial, e: number, tema: StackTheme, t = 0) {
+  const luz = Math.max(e, t);
+  material.color.lerpColors(APAGADO, NEGRO, luz);
+  mezcla.copy(TINTA).multiplyScalar(TINTA_NIVEL * t * (1 - e));
+  material.emissive.copy(AMBAR[tema]).multiplyScalar(e).add(mezcla);
+  material.emissiveIntensity = 1;
   // Solo el canto encendido sale del tone mapping; apagado se comporta como el resto de la pila.
-  const fuera = e > 0.5;
+  const fuera = luz > 0.5;
   if (material.toneMapped === fuera) {
     material.toneMapped = !fuera;
     material.needsUpdate = true;

@@ -1,10 +1,12 @@
 ---
 /* Composición de la página de inicio. Cada sección vive en su componente; este archivo solo decide
-   el orden y qué secciones comparten el escenario del 3D (docs/design/handoff.md §1). */
+   el orden (docs/design/handoff.md, v2 §2). La pila 3D vive en el Escenario, una capa fija detrás de
+   todo; cada sección se identifica con `data-clave` para que el cargador sepa qué pose toca. */
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
-import Stage from '../components/Stage.astro';
+import Escenario from '../components/Escenario.astro';
 import Hero from '../components/Hero.astro';
+import Servicios from '../components/Servicios.astro';
 import Sumari from '../components/Sumari.astro';
 import Trayectoria from '../components/Trayectoria.astro';
 import Stack from '../components/Stack.astro';
@@ -14,14 +16,14 @@ import Footer from '../components/Footer.astro';
 import { perfil } from '../data/perfil';
 ---
 
-<Base title={`${perfil.nombre} — ${perfil.rol}`} description={perfil.bioCorta}>
+<Base title={`${perfil.nombre} — ${perfil.rol}`} description={perfil.bioCorta} preloadImage="/poster/pila.avif">
+  <Escenario />
   <Header />
   <main id="contenido">
-    <Stage>
-      <Hero />
-      <Sumari />
-      <Trayectoria />
-    </Stage>
+    <Hero />
+    <Servicios />
+    <Sumari />
+    <Trayectoria />
     <Stack />
     <Principios />
     <Contacto />

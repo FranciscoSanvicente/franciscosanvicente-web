@@ -169,6 +169,37 @@ a:hover {
   --header-h: calc(44px + 2 * var(--s-5));
 
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Velo sobre la pila detrás del texto del hero (v2 §4): fondo al 86 %. */
+  --scrim: color-mix(in srgb, var(--bg) 86%, transparent);
+}
+
+/* ── Escenario 3D (handoff v2 §2): la pila vive en una capa fija detrás de todo; el contenido va
+   encima y ninguna sección tiene fondo opaco salvo la tarjeta de Sumari. */
+header,
+main,
+footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* Zona de texto en escritorio: columnas 1–7 de la retícula; la pila ocupa el resto. */
+@media (min-width: 64rem) {
+  .zona {
+    width: calc((100% - 11 * 24px) / 12 * 7 + 6 * 24px);
+  }
+}
+
+/* Ventanas de retrato: un hueco al inicio de cada sección donde la pila actúa a plena opacidad.
+   Solo existen si va a haber 3D (`html.js` sin `lite`), decidido antes de pintar: sin saltos. */
+.escena {
+  display: none;
+}
+
+@media (max-width: 63.99rem) {
+  html.js:not(.lite) .escena {
+    display: block;
+    height: 48svh;
+  }
 }
 
 .container {
@@ -206,7 +237,8 @@ a:hover {
 /* Escala tipográfica */
 .t-name {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 1.6rem + 6.2vw, 7.5rem);
+  /* v2: el nombre es la capa delantera de la escena (~155 px a 1280, 56 px a 375). */
+  font-size: clamp(3.5rem, 0.5rem + 11.5vw, 12rem);
   font-weight: 600;
   letter-spacing: -0.045em;
   line-height: 0.92;

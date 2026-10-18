@@ -7,13 +7,13 @@ export const perfil = {
   /** Partes del nombre para `profile:first_name/last_name` y la tarjeta OG (no se parte `nombre`). */
   nombrePila: 'Francisco',
   apellidos: 'Sanvicente',
-  rol: 'Fundador de Sumari',
+  rol: 'Ingeniero de software',
   /** Línea del hero, debajo del nombre. */
-  lede: 'Fundador de Sumari. Construyo finanzas para quien vive en varias monedas.',
+  lede: 'Ingeniero de software. Construyo apps móviles, web y el backend que las sostiene.',
   bioCorta:
-    'Desarrollador full stack y fundador de Sumari, la app de finanzas personales para quien maneja su dinero en varias monedas. Puerto Ordaz, Venezuela.',
+    'Ingeniero de software en Puerto Ordaz, Venezuela. Construyo apps móviles, web y backend con React Native, React, Node.js y PostgreSQL. Creador de Sumari.',
   bioLarga:
-    'Francisco Sanvicente es un desarrollador de software venezolano, de Puerto Ordaz, con seis años construyendo productos web y móviles. Ha trabajado como full stack en equipos de producto, encargándose tanto de la interfaz como del backend que la sostiene. En 2026 fundó Sumari, una app de finanzas personales que reúne bolívares, dólares, USDT y euros en un solo total a la tasa del día, hecha para la forma en que la gente en Venezuela maneja de verdad su dinero.',
+    'Francisco Sanvicente es un ingeniero de software venezolano, de Puerto Ordaz, con seis años construyendo productos web y móviles. Ha trabajado como full stack en equipos de producto, encargándose tanto de la interfaz como del backend que la sostiene. En 2026 fundó Sumari, una app de finanzas personales que reúne bolívares, dólares, USDT y euros en un solo total a la tasa del día, hecha para la forma en que la gente en Venezuela maneja de verdad su dinero.',
   ciudad: 'Puerto Ordaz',
   region: 'Bolívar',
   pais: 'Venezuela',

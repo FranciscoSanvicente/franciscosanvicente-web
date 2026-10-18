@@ -1,32 +1,29 @@
-/* Partes puras del cargador 3D (src/scripts/stack-loader.ts): el gate de capacidad estática y la
-   coreografía que traduce la posición del scroll a estado de la escena. Sin efectos: se pueden
-   razonar (y probar) sin canvas.
+/* Partes puras del cargador 3D (./stack-loader): el gate de capacidad y el interpolador que traduce
+   la posición del scroll a la pose de la pila (docs/design/handoff.md, v2 §3). Sin efectos: lee
+   medidas ya cacheadas, nunca el DOM.
 
-   Encadenado del scroll (docs/design/handoff.md §5, decisión de la unidad 7):
-   - Hero y Sumari: pila abierta (open 1), placas asentadas, solo emite la superior. El giro lo
-     amortigua el cargador POR TIEMPO; aquí solo se decide su objetivo (0.12 en el hero, 0 fuera).
-   - Aproximación (el hito 1 sube desde el borde inferior hasta la línea del 60 %): la pila se
-     cierra (open 1→0) y las cuatro placas se levantan (plate 1→0). Al tocar la línea todo está
-     arriba, que es justo donde arranca la fórmula de cada hito: no hay saltos.
-   - Trayectoria: cada placa baja con su hito, plate = pᵢ/0.6. La base llega con el hito 1; la 2–4
-     esperan arriba hasta que su hito toca la línea. Emisión total desde p₃ ≥ 0.5 y cámara frontal
-     en el 30 % final del hito 4. Todo sale de la posición del scroll: subir lo deshace. */
-
-export const SPIN = 0.12;
+   - Sección actual: la última cuyo borde superior ya pasó la línea del 40 %. Entre dos secciones,
+     la pose se mezcla mientras la siguiente sube del borde inferior (100 %) a esa línea, con
+     easeInOutCubic. Cada sección modula su pose con su propio progreso (./waypoints → ajustar).
+   - Retrato: la pila actúa a opacidad 1 dentro de las ventanas (`.escena` y la mitad superior del
+     hero) y baja a 0.14 mientras pasa el texto, para que nunca compita con la lectura. */
+import type { StackPose } from '../three/types';
+import { GIRO, ORDEN, PAISAJE, RETRATO, ajustar, type Clave, type Contexto } from './waypoints';
 
 export const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 export const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
-export const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2);
+const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2);
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+const ALFA_LECTURA = 0.14;
 
 type Nav = Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } };
 
-/** Lo que no cambia en la visita: ahorro de datos, memoria, núcleos y WebGL2 (en ese orden, del
-    más barato al más caro; el contexto de prueba se libera enseguida). El cargador lo llama solo
-    cuando la columna del 3D ya está en pantalla: en móvil no se crea ningún contexto. */
+/** Lo que el script en línea del <head> no puede saber sin crear un contexto: WebGL2. El resto
+    (ahorro de datos, memoria, núcleos, movimiento reducido) ya decidió `html.lite` antes de pintar. */
 export function capable(): boolean {
   const nav = navigator as Nav;
   if (nav.connection?.saveData) return false;
-  if ((nav.deviceMemory ?? 8) < 4 || (nav.hardwareConcurrency ?? 4) < 4) return false;
   try {
     const gl = document.createElement('canvas').getContext('webgl2');
     if (!gl) return false;
@@ -37,35 +34,69 @@ export function capable(): boolean {
   }
 }
 
-export interface Pose {
-  spin: number;
-  open: number;
-  /** Progreso crudo de las placas 1…4 (la escena aplica su easing). */
-  plates: [number, number, number, number];
-  emissive: boolean;
-  front: number;
+export interface Caja {
+  top: number;
+  height: number;
 }
 
-type Box = Pick<DOMRect, 'top' | 'height'>;
+/** Medidas en coordenadas del documento (top = distancia al inicio de la página). */
+export interface Medidas {
+  secciones: (Caja & { clave: Clave })[];
+  hitos: Caja[];
+  servicios: Caja[];
+  ventanas: Caja[];
+}
 
-/** Estado de la escena para un viewport de alto `vh`, con el borde superior de #sumari en
-    `sumariTop` (null si no existe) y las cajas de los cuatro hitos (null si falta la trayectoria). */
-export function pose(vh: number, sumariTop: number | null, hitos: Box[] | null): Pose {
-  // Sumari "entra" cuando asoma un 10 % del viewport; por debajo de eso estamos en el hero.
-  const spin = sumariTop === null || sumariTop > 0.9 * vh ? SPIN : 0;
-  if (!hitos) {
-    return { spin, open: 1, plates: [1, 1, 1, 1], emissive: false, front: 0 };
-  }
-  const line = 0.6 * vh;
-  const p = hitos.map((r) => clamp01((line - r.top) / Math.max(1, r.height)));
-  // 0 con el hito 1 en el borde inferior, 1 al tocar la línea del 60 %.
-  const approach = clamp01((vh - hitos[0]!.top) / (vh - line));
-  const plate = (k: number) => (p[0]! > 0 ? clamp01(p[k]! / 0.6) : 1 - approach);
+export interface Estado {
+  pose: StackPose;
+  spin: number;
+  alpha: number;
+}
+
+function mezclar(a: StackPose, b: StackPose, t: number): StackPose {
+  const m = (x: number[], y: number[]) => x.map((v, k) => lerp(v, y[k]!, t)) as StackPose['plates'];
   return {
-    spin,
-    open: 1 - approach,
-    plates: [plate(0), plate(1), plate(2), plate(3)],
-    emissive: p[2]! >= 0.5,
-    front: easeInOutCubic(clamp01((p[3]! - 0.7) / 0.3)),
+    x: lerp(a.x, b.x, t), y: lerp(a.y, b.y, t), h: lerp(a.h, b.h, t),
+    rotX: lerp(a.rotX, b.rotX, t), rotY: lerp(a.rotY, b.rotY, t),
+    open: lerp(a.open, b.open, t), spreadX: lerp(a.spreadX, b.spreadX, t),
+    plates: m(a.plates, b.plates), emit: m(a.emit, b.emit), ink: m(a.ink, b.ink),
   };
+}
+
+/** Estado de la pila con el documento desplazado `y` px, un viewport de alto `vh` y un canvas de
+    alto `ch` (100lvh). */
+export function estado(y: number, vh: number, ch: number, m: Medidas, retrato: boolean): Estado {
+  const rel = (c: Caja) => c.top - y;
+  const progreso = (c: Caja, linea: number) => clamp01((linea - rel(c)) / Math.max(1, c.height));
+
+  const servicio = m.servicios.findIndex((c) => rel(c) <= 0.5 * vh && rel(c) + c.height > 0.5 * vh);
+  const hitos = m.hitos.map((c) => progreso(c, 0.6 * vh));
+  const aproximacion = m.hitos[0] ? clamp01((vh - rel(m.hitos[0])) / (0.4 * vh)) : 1;
+  const tabla = retrato ? RETRATO : PAISAJE;
+  const poseDe = (i: number) => {
+    const sec = m.secciones[i]!;
+    const c: Contexto = { s: progreso(sec, 0.5 * vh), servicio, hitos, aproximacion, retrato };
+    return ajustar(sec.clave, tabla[sec.clave], c);
+  };
+
+  let j = m.secciones.findIndex((c) => rel(c) > 0.4 * vh);
+  let b = 0;
+  if (j === -1) j = m.secciones.length;
+  else if (j > 0) b = easeInOutCubic(clamp01((vh - rel(m.secciones[j]!)) / (0.6 * vh)));
+  const i = Math.max(0, j - 1);
+  const siguiente = Math.min(j, m.secciones.length - 1);
+  const pose = b > 0 ? mezclar(poseDe(i), poseDe(siguiente), b) : poseDe(i);
+  const clave = m.secciones[b < 0.5 ? i : siguiente]?.clave ?? ORDEN[0]!;
+
+  let alpha = 1;
+  if (retrato) {
+    const centro = pose.y * ch;
+    const d = Math.min(
+      ...m.ventanas.map((c) => Math.max(0, rel(c) - centro, centro - (rel(c) + c.height))),
+      Number.POSITIVE_INFINITY,
+    );
+    const t = clamp01(d / (0.15 * vh));
+    alpha = lerp(1, ALFA_LECTURA, t * t * (3 - 2 * t));
+  }
+  return { pose, spin: GIRO[clave], alpha };
 }

@@ -1,10 +1,11 @@
 ---
 /* Cabecera (docs/design/handoff.md §4). No es sticky: la primera lectura es el nombre, no la
    navegación. A la izquierda el lugar, como dato y no como enlace (se oculta en móvil para que el
-   nav no se apriete); a la derecha el nav a las tres anclas de la página, con área táctil de 44 px. */
+   nav no se apriete); a la derecha el nav a las anclas principales de la página, con área táctil de 44 px. */
 import { perfil } from '../data/perfil';
 
 const secciones = [
+  { href: '#servicios', texto: 'Servicios' },
   { href: '#sumari', texto: 'Sumari' },
   { href: '#trayectoria', texto: 'Trayectoria' },
   { href: '#contacto', texto: 'Contacto' },

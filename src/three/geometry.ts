@@ -11,9 +11,9 @@ const BASE_HUECO = 0.364;
 const SUBIDA = 0.5 * Math.tan(SEMIANGULO); // altura del vértice sobre los extremos
 const BANDA = GROSOR / Math.cos(SEMIANGULO); // alto vertical del brazo con ese trazo
 
-/** Separación extra entre placas con setOpen(1). */
+/** Separación extra entre placas con open 1. */
 export const ABIERTA = 0.6;
-/** Altura sobre su asiento de una placa con setPlate(i, 0). El rebote de easeOutBack(·, 1.3) es un
+/** Altura sobre su asiento de una placa levantada (plates[i] = 0). El rebote de easeOutBack(·, 1.3) es un
     6 % (0.07): no llega a la placa de abajo (hueco ≥ 0.15). */
 export const ELEVACION = 1.2;
 
@@ -24,16 +24,11 @@ const arriba = (open: number) => ASIENTOS[3] + 3 * ABIERTA * open + BANDA / 2 + 
 /** Centro vertical de la pila asentada con esa apertura (las placas elevadas no cuentan). */
 export const centro = (open: number) => (ABAJO + arriba(open)) / 2;
 
-/** Cámara isométrica real: atan(1/√2) = 35.264° de picado, 45° de guiñada. */
-export const ISO_X = -Math.atan(1 / Math.SQRT2);
-export const ISO_Y = Math.PI / 4;
 
-/** Semialto del encuadre (lado corto del canvas): cabe la pila abierta en isométrica y de frente,
-    en cualquier ángulo de giro (radio del cilindro que barre la base), con un 15 % de margen. */
-const RADIO = Math.hypot(BASE_ANCHO / 2, FONDO / 2);
-const ALTO = arriba(1) - ABAJO;
-export const VISTA =
-  1.15 *Math.max((ALTO * Math.cos(ISO_X) + 2 * RADIO * Math.sin(-ISO_X)) / 2, ALTO / 2, RADIO);
+/** Alto de referencia de la pila (abierta, open 1): `h` de la pose es este alto en pantalla. */
+export const ALTO_REF = arriba(1) - ABAJO;
+/** Distancia entre centros de placas en fila (spreadX 1): el ancho de la base más aire. */
+export const FILA = 1.45;
 
 export const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 export const easeOutBack = (t: number, s: number) => 1 + (s + 1) * (t - 1) ** 3 + s * (t - 1) ** 2;

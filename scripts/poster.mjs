@@ -5,7 +5,7 @@
    Autónomo y reproducible: arranca el dev server de Astro en un puerto libre, abre con Playwright
    (Edge o Chrome del sistema, como scripts/shot.mjs) una página mínima servida por el propio script
    en ese origen —así Vite compila src/three/stack.ts igual que en el sitio— y pinta el encuadre del
-   póster: isométrica, separación al 50 %, todas las placas asentadas, solo la superior emitiendo,
+   póster: la pose del hero (isométrica, abierta), solo la placa superior emitiendo,
    tema oscuro, fondo transparente. Captura el canvas a 1920 px (DPR 2), lo reduce a 960×960 con
    sharp y escribe public/poster/pila.avif (con alfa) y pila.webp, cada uno ≤ 80 KB.
    Regenéralo cada vez que cambie algo visual de src/three/. */
@@ -25,12 +25,16 @@ const PAGINA = `<!doctype html>
 <canvas id="pila"></canvas>
 <script type="module">
   import { createStackScene } from '/src/three/stack.ts';
-  const s = createStackScene(document.getElementById('pila'), { theme: 'dark' });
+  // La pose del hero (abierta, isométrica, solo la placa superior en ámbar), centrada y con la pila
+  // ocupando el 80 % del alto: Escenario.astro dimensiona el póster con esa proporción para que el
+  // fundido al canvas no cambie el tamaño.
+  const s = createStackScene(document.getElementById('pila'), { theme: 'dark', quality: 'high' });
   s.setSpin(0);
-  s.setFront(0);
-  s.setOpen(0.5);
-  s.setEmissive(false);
-  for (const i of [1, 2, 3, 4]) s.setPlate(i, 1);
+  s.setPose({
+    x: 0.5, y: 0.5, h: 0.8, rotX: -35.264, rotY: 45, open: 1, spreadX: 0,
+    plates: [1, 1, 1, 1], emit: [0, 0, 0, 1], ink: [0, 0, 0, 0],
+  });
+  s.resize();
   s.start();
   requestAnimationFrame(() => requestAnimationFrame(() => (window.__listo = true)));
 </script>`;

@@ -77,7 +77,7 @@ for (const perfil of PERFILES) {
 
   const recursos = [...bytes.values()].filter((r) => r.url && r.size);
   const js = recursos.filter((r) => r.type === 'Script');
-  const escena = js.filter((r) => /three|stack/i.test(r.url) && !/stack-loader|Stage/i.test(r.url));
+  const escena = js.filter((r) => /three|stack/i.test(r.url) && !/stack-loader|Escenario/i.test(r.url));
   const kb = (lista) => lista.reduce((s, r) => s + r.size, 0) / 1024;
   const jsInicial = kb(js) - kb(escena);
   const total = kb(recursos);

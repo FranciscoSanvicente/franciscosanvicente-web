@@ -12,6 +12,35 @@ Decisiones confirmadas por el coordinador: dos columnas desde 1024 px; la emisi�
 a las cuatro placas en el hito 3; "Cómo pienso" se redacta como borrador a partir de los principios
 documentados de Sumari y queda marcado para revisión de Francisco (en el PR, no en la página).
 
+## v2 — escenario 3D continuo (2026-10-17)
+
+Tras ver el render, Francisco pidió más impacto, presentarse como algo más que fundador de Sumari
+y que el 3D acompañe toda la página, también en móvil. Esta sección **sustituye** a §1 (el
+`.stage` y su columna sticky ya no existen), al orden de §3/§4 y a la coreografía de §5. Lo demás
+(tipografía, espaciado, §6, §7) sigue vigente.
+
+- **Identidad:** "Ingeniero de software" bajo el nombre; Sumari pasa a ser "Sumari, mi producto".
+- **Orden:** Hero → Servicios (capa 01) → Sumari (02) → Trayectoria (03) → Con qué construyo (04)
+  → Cómo pienso (05) → Contacto (06). Nav: Servicios · Sumari · Trayectoria · Contacto.
+- **Escenario:** una capa fija a pantalla completa (`Escenario.astro`, 100lvh, z 0, sin eventos)
+  con póster + canvas; `header`, `main` y `footer` van encima (z 1). Cada sección lleva
+  `data-clave` y el cargador interpola la pose al pasar de una a otra.
+- **Hero:** `.t-name` `clamp(3.5rem, 0.5rem + 11.5vw, 12rem)`; texto abajo a la izquierda. Velo
+  `::before` con `--scrim` (fondo al 86 %): horizontal en escritorio (fondo → velo → transparente
+  antes de la pila, ~64vw) y vertical en retrato (pila arriba, texto desde ~54svh).
+- **Zona de texto:** en escritorio `.zona` = columnas 1–7; la pila vive en x ≥ 64vw (salvo Cómo
+  pienso, con la pila bajo la cabecera a la izquierda). Stack: `dt` 1–2, `dd` 3–8.
+- **Retrato:** cada sección (salvo el hero) abre con `.escena` de 48svh, una ventana donde la pila
+  actúa a opacidad 1; mientras pasa el texto baja a 0.14.
+- **Coreografía** (poses en `src/scripts/waypoints.ts`): hero abierta y girando · Servicios en
+  despiece 3/4, la capa del servicio leído en tinta (apps → superior, web → medio, backend → inferior
+  + base) · Sumari: cuatro placas en fila (las monedas) → se apilan → se encienden en ámbar y se lee
+  el logo de frente · Trayectoria se rebobina y encaja hito a hito · Stack en despiece girando ·
+  Cómo pienso de canto · Contacto cerrada y girando.
+- **Ligero:** `html.lite` se decide en el `<head>` (ahorro de datos, movimiento reducido, memoria o
+  núcleos < 4): sin escenario ni ventanas; el hero pinta su póster. Con frames lentos sostenidos la
+  escena baja a calidad baja (DPR 1, sin giro) y, si no basta, vuelve el póster.
+
 ## 1. Retícula
 
 - `--container: 1320px`; `--gutter: clamp(1.25rem, 4vw, 3rem)`.

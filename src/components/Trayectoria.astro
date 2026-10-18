@@ -1,8 +1,8 @@
 ---
 /* Trayectoria (docs/design/handoff.md §4 y §6). Cuatro hitos que son las cuatro capas de la pila:
    el hito 1 es la base y el 4 la placa superior. Desde 64rem cada hito ocupa 72svh para que la
-   pila sticky de la derecha encaje una placa por hito con el scroll nativo; por debajo no hay 3D y
-   cada glifo dibuja cuántas capas lleva puestas.
+   pila del escenario (a la derecha) encaje una placa por hito con el scroll nativo; cada glifo
+   dibuja además cuántas capas lleva puestas.
 
    Contrato DOM que lee el cargador 3D: `#trayectoria [data-hito="1".."4"]`. No cambiar el id ni
    esos atributos. */
@@ -10,9 +10,11 @@ import { hitos } from '../data/perfil';
 import Glifo from './Glifo.astro';
 ---
 
-<section id="trayectoria" class="section" aria-labelledby="h-trayectoria">
+<section id="trayectoria" class="section container" data-clave="trayectoria" aria-labelledby="h-trayectoria">
+  <div class="escena" aria-hidden="true"></div>
+  <div class="zona">
   <div class="section-head">
-    <p class="eyebrow">capa 02</p>
+    <p class="eyebrow">capa 03</p>
     <h2 id="h-trayectoria" class="t-h2">Trayectoria</h2>
   </div>
   <ol class="hitos">
@@ -29,6 +31,7 @@ import Glifo from './Glifo.astro';
       ))
     }
   </ol>
+  </div>
 </section>
 
 <style>

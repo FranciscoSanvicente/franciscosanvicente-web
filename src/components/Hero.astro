@@ -1,15 +1,19 @@
 ---
-/* Hero (docs/design/handoff.md §4). El nombre domina la primera lectura y es el LCP, por eso el H1
-   nunca lleva `.reveal`: tiene que pintarse con el primer render. Solo se revelan lede y redes.
-   Desde 64rem la pila la pinta el Stage en su columna; por debajo el Hero lleva su propio póster
-   bajo las redes. No es perezoso: en móvil cae en la primera pantalla y es el LCP, y con `lazy` el
-   navegador lo pedía tarde (medido con pnpm audit). Pesa ~11 KB y es el mismo archivo que el
-   póster del Stage, así que en escritorio sale de caché. */
+/* Hero (docs/design/handoff.md, v2 §2 y §4). El nombre domina y es la capa delantera de la escena:
+   la pila vive en el escenario fijo detrás (Escenario.astro) y su base asoma tras «Sanvicente». El
+   H1 nunca lleva `.reveal`: es el LCP y se pinta con el primer render.
+
+   Legibilidad: un velo (`::before`, detrás del texto y delante del canvas) protege el nombre. En
+   escritorio es horizontal (fondo → velo → transparente hacia la pila); en retrato es vertical
+   (la pila arriba, el texto anclado abajo desde ~54svh).
+
+   Sin JS o en modo ligero (`html.lite`) no hay escenario: el hero pinta su propio póster, a la
+   derecha en escritorio y bajo las redes en móvil. No es perezoso: en móvil es el LCP. */
 import Redes from './Redes.astro';
 import { perfil, redes } from '../data/perfil';
 ---
 
-<section class="hero" aria-labelledby="nombre">
+<section id="inicio" class="hero container" data-clave="inicio" aria-labelledby="nombre">
   <h1 id="nombre" class="hero__nombre t-name">{perfil.nombre}</h1>
   <p class="hero__lede t-lede reveal" style="--reveal-i:0">{perfil.lede}</p>
   {/* Sin redes con URL no se pinta el envoltorio: así no queda un hueco de `--s-7` vacío. */}
@@ -28,10 +32,16 @@ import { perfil, redes } from '../data/perfil';
 
 <style>
   .hero {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    align-content: end;
+    min-height: calc(100svh - var(--header-h));
     padding-top: var(--s-9);
+    padding-bottom: var(--s-8);
   }
 
-  /* `min-content` corta en cada espacio: nombre y apellido siempre en dos líneas, en todo ancho. */
+  /* `min-content` corta en cada espacio: nombre y apellido siempre en dos líneas. */
   .hero__nombre {
     width: min-content;
   }
@@ -44,7 +54,23 @@ import { perfil, redes } from '../data/perfil';
     margin-top: var(--s-7);
   }
 
+  /* Velo: solo cuando hay escenario detrás. Ocupa todo el ancho de la ventana. */
+  :global(html.js:not(.lite)) .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 calc(50% - 50vw);
+    width: 100vw;
+    z-index: -1;
+    background: linear-gradient(to bottom, transparent 46%, var(--scrim) 54%);
+  }
+
+  /* Póster propio solo sin escenario (sin JS o modo ligero). */
   .hero__poster {
+    display: none;
+  }
+
+  :global(html:not(.js)) .hero__poster,
+  :global(html.lite) .hero__poster {
     display: block;
     width: min(72vw, 360px);
     margin-top: var(--s-7);
@@ -57,18 +83,31 @@ import { perfil, redes } from '../data/perfil';
   }
 
   @media (min-width: 64rem) {
-    /* El hero llena la primera pantalla junto con la cabecera; con `100svh` a secas las redes
-       quedarían pegadas al pliegue. */
     .hero {
-      min-height: calc(100svh - var(--header-h));
-      display: grid;
-      align-content: end;
       padding-top: 0;
-      padding-bottom: var(--s-9);
     }
 
-    .hero__poster {
-      display: none;
+    /* Fondo hasta 35vw, velo bajo el final del apellido (~55vw) y transparente antes de la pila
+       (~64vw): si el velo la alcanza, en tema claro la lava con un degradado blanco. */
+    :global(html.js:not(.lite)) .hero::before {
+      background: linear-gradient(
+        to right,
+        var(--bg) 35vw,
+        var(--scrim) 55vw,
+        transparent 64vw
+      );
+    }
+
+    /* Sin escenario, el póster va a la derecha, en el sitio de la pila. */
+    :global(html:not(.js)) .hero__poster,
+    :global(html.lite) .hero__poster {
+      position: absolute;
+      left: calc(78vw - (100vw - 100%) / 2);
+      top: 48%;
+      z-index: -2;
+      width: min(80svh, 40vw);
+      margin: 0;
+      translate: -50% -50%;
     }
   }
 </style>

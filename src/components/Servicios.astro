@@ -1,0 +1,100 @@
+---
+/* "Qué puedo construir para ti" (docs/design/handoff.md, v2 §2 y §5). Va justo después del hero:
+   quién es → qué hace por quien visita. Tres servicios que son tres capas de la pila: apps → chevron
+   superior, web → medio, backend y datos → inferior + base. Desde 64rem cada servicio ocupa 56svh
+   para que la capa del que se está leyendo pase a tinta en el 3D con el scroll nativo.
+
+   Contrato DOM que lee el cargador 3D: `#servicios .servicio` en este orden. Las tecnologías salen
+   del stack real de Francisco (perfil.ts); nada de precios, clientes ni promesas. Se repiten a
+   propósito: "Con qué construyo" queda como el inventario completo. */
+const SERVICIOS = [
+  {
+    titulo: 'Apps móviles',
+    detalle: 'Apps para Android e iPhone con React Native y Expo, de la primera pantalla a la tienda.',
+  },
+  {
+    titulo: 'Web',
+    detalle: 'Sitios y aplicaciones con React, Next.js o Astro, del diseño en código al despliegue.',
+  },
+  {
+    titulo: 'Backend y APIs',
+    detalle:
+      'El servidor, la API y la base de datos: Node.js con NestJS o Express, PostgreSQL o MongoDB, en AWS, Google Cloud o Supabase.',
+  },
+];
+---
+
+<section id="servicios" class="section container" data-clave="servicios" aria-labelledby="h-servicios">
+  <div class="escena" aria-hidden="true"></div>
+  <div class="zona">
+    <div class="section-head reveal">
+      <p class="eyebrow">capa 01</p>
+      <h2 id="h-servicios" class="t-h2">Qué puedo construir para ti</h2>
+    </div>
+
+    <ol class="servicios" role="list">
+      {
+        SERVICIOS.map((s, i) => (
+          <li class="servicio reveal" style={`--reveal-i: ${i}`}>
+            <p class="eyebrow">1.{i + 1}</p>
+            <h3 class="t-statement">{s.titulo}</h3>
+            <p class="t-body servicio__detalle">{s.detalle}</p>
+          </li>
+        ))
+      }
+    </ol>
+
+    <a class="link-arrow servicios__cta" href="#contacto">
+      Escríbeme <span class="arrow" aria-hidden="true">↓</span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .servicios {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .servicio {
+    display: grid;
+    gap: var(--s-3);
+    padding-block: var(--s-6);
+    border-top: 1px solid var(--border);
+  }
+
+  .servicio__detalle {
+    color: var(--ink3);
+  }
+
+  .servicios__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-1);
+    min-height: 44px;
+    margin-top: var(--s-6);
+    font-family: var(--font-mono);
+    font-weight: 500;
+  }
+
+  /* La flecha baja hacia contacto: el desplazamiento de .link-arrow es diagonal, aquí vertical. */
+  .servicios__cta:hover .arrow,
+  .servicios__cta:focus-visible .arrow {
+    transform: translateY(2px);
+  }
+
+  @media (min-width: 64rem) {
+    .servicio {
+      min-height: 56svh;
+      align-content: start;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .servicios__cta:hover .arrow,
+    .servicios__cta:focus-visible .arrow {
+      transform: none;
+    }
+  }
+</style>

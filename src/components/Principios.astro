@@ -4,7 +4,7 @@
    src/data/perfil.ts porque solo esta sección las pinta. */
 
 interface Posicion {
-  /** Índice visible: capa 04 → 4.1, 4.2, 4.3. */
+  /** Índice visible: capa 05 → 5.1, 5.2, 5.3. */
   indice: string;
   afirmacion: string;
   detalle: string;
@@ -12,19 +12,19 @@ interface Posicion {
 
 const POSICIONES: Posicion[] = [
   {
-    indice: '4.1',
+    indice: '5.1',
     afirmacion: 'Cada número tiene que decir de dónde sale.',
     detalle:
       'En Sumari cada tasa lleva su nombre real: BCV, Euro BCV, USDT P2P. Si el asistente no tiene el dato, lo dice; no lo inventa.',
   },
   {
-    indice: '4.2',
+    indice: '5.2',
     afirmacion: 'Lo privado se procesa en tu teléfono.',
     detalle:
       'El audio y la foto del comprobante no salen de ahí; a la IA solo viaja el texto. Y no se venden los datos de nadie.',
   },
   {
-    indice: '4.3',
+    indice: '5.3',
     afirmacion: 'Construyo para las cuentas que de verdad se hacen en Venezuela.',
     detalle:
       'Bolívares en el banco, dólares en efectivo, USDT y a veces euros. Sumari anota ese dinero y lo suma a la tasa del día; no lo mueve ni promete rendimientos.',
@@ -32,10 +32,11 @@ const POSICIONES: Posicion[] = [
 ];
 ---
 
-<section id="principios" class="section container" aria-labelledby="h-principios">
+<section id="principios" class="section container" data-clave="principios" aria-labelledby="h-principios">
+  <div class="escena" aria-hidden="true"></div>
   <div class="principios grid">
     <div class="section-head principios__head">
-      <p class="eyebrow">capa 04</p>
+      <p class="eyebrow">capa 05</p>
       <h2 id="h-principios" class="t-h2">Cómo pienso</h2>
     </div>
 

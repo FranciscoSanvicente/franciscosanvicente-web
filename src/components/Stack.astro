@@ -7,9 +7,10 @@
 import { stack } from '../data/perfil';
 ---
 
-<section id="stack" class="section container" aria-labelledby="h-stack">
+<section id="stack" class="section container" data-clave="stack" aria-labelledby="h-stack">
+  <div class="escena" aria-hidden="true"></div>
   <div class="section-head reveal">
-    <p class="eyebrow">capa 03</p>
+    <p class="eyebrow">capa 04</p>
     <h2 id="h-stack" class="t-h2">Con qué construyo</h2>
   </div>
 
@@ -88,12 +89,13 @@ import { stack } from '../data/perfil';
       column-gap: 24px;
     }
 
+    /* v2: la tabla se queda en las columnas 1–8; la pila en despiece ocupa la derecha. */
     .stack__fila dt {
-      grid-column: 1 / span 3;
+      grid-column: 1 / span 2;
     }
 
     .stack__tecnologias {
-      grid-column: 4 / -1;
+      grid-column: 3 / span 6;
     }
   }
 </style>

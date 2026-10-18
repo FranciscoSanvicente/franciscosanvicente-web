@@ -1,0 +1,90 @@
+---
+/* Escenario 3D a pantalla completa (docs/design/handoff.md, v2 §2): una capa fija detrás del
+   contenido con el póster de la pila y el canvas que funde sobre él cuando la escena carga
+   (src/scripts/stack-loader.ts). Es decoración: aria-hidden y sin eventos de puntero.
+
+   Solo existe con `html.js` y sin `html.lite` (decidido en el <head> antes de pintar). Sin JS o en
+   modo ligero no se ve, y el Hero pinta su propio póster en el flujo.
+
+   El póster tiene la pose del hero y la pila ocupa el 80 % de su alto (scripts/poster.mjs): su lado
+   es el alto de la pila en el hero ÷ 0.8, así el fundido al canvas no cambia de tamaño. La opacidad
+   (--alfa) la fija el cargador: en retrato baja mientras pasa el texto. */
+---
+
+<div class="escenario" aria-hidden="true">
+  <picture class="escenario__poster">
+    <source srcset="/poster/pila.avif" type="image/avif" />
+    <img src="/poster/pila.webp" width="960" height="960" alt="" decoding="async" fetchpriority="high" />
+  </picture>
+  <canvas class="escenario__canvas" hidden></canvas>
+</div>
+
+<style>
+  .escenario {
+    display: none;
+    position: fixed;
+    inset: 0 0 auto;
+    height: 100lvh;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  :global(html.js:not(.lite)) .escenario {
+    display: block;
+  }
+
+  .escenario__poster,
+  .escenario__canvas {
+    opacity: var(--alfa, 1);
+  }
+
+  /* Retrato: pila del hero en (60vw, 34lvh), 0.44 del alto (bajo la cabecera, sobre el nombre). */
+  .escenario__poster {
+    position: absolute;
+    left: 60vw;
+    top: 34lvh;
+    width: 55lvh;
+    translate: -50% -50%;
+  }
+
+  .escenario__poster img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .escenario__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+  }
+
+  .escenario__canvas.is-live {
+    opacity: var(--alfa, 1);
+    transition: opacity 400ms ease-out;
+  }
+
+  .escenario__poster.is-covered {
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 300ms ease-out 200ms,
+      visibility 0s linear 500ms;
+  }
+
+  /* Paisaje: pila del hero en (78vw, 48lvh), 0.9 del alto. */
+  @media (min-width: 64rem) {
+    .escenario__poster {
+      left: 78vw;
+      top: 48lvh;
+      width: 112.5lvh;
+    }
+  }
+</style>
+
+<script>
+  import '../scripts/stack-loader';
+</script>

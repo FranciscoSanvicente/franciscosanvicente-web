@@ -19,6 +19,8 @@ interface Props {
   /** Páginas que no deben aparecer en Google (404). Sin canónica, og:url ni JSON-LD: la 404 se
       sirve en cualquier ruta, así que su URL de build (/404) no es la que se comparte. */
   noindex?: boolean;
+  /** Imagen AVIF a precargar con prioridad alta (el LCP de la home en móvil es el póster). */
+  preloadImage?: string;
 }
 
 // Canónica sin barra final, para que cada página tenga una sola URL.
@@ -35,6 +37,7 @@ const {
   imageAlt = `${perfil.nombre}, ${perfil.rol.charAt(0).toLowerCase()}${perfil.rol.slice(1)}. ${perfil.ciudad}, ${perfil.pais}.`,
   ogType = path === '/' ? 'profile' : 'website',
   noindex = false,
+  preloadImage,
 } = Astro.props;
 
 // Las redes leen la imagen desde fuera: tiene que ser absoluta.
@@ -91,6 +94,7 @@ const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
     <meta name="author" content={perfil.nombre} />
     {noindex ? <meta name="robots" content="noindex, nofollow" /> : <link rel="canonical" href={canonicalURL} />}
     <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
+    {preloadImage && <link rel="preload" href={preloadImage} as="image" type="image/avif" fetchpriority="high" />}
     <meta name="theme-color" content="#0B0C0E" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -125,7 +129,26 @@ const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
 
     {/* `html.js` habilita lo que solo tiene sentido con JS (revelados, botón Copiar). Va en línea y
         antes de pintar para que no haya parpadeo. */}
-    <script is:inline>document.documentElement.classList.add('js');</script>
+    {/* `html.lite`: sin escenario 3D (ahorro de datos, movimiento reducido, poca memoria o pocos
+        núcleos). Se decide aquí, antes de pintar, para que las ventanas del 3D no aparezcan y
+        desaparezcan después (handoff v2 §6). */}
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        try {
+          var n = navigator;
+          var c = n.connection;
+          if (
+            (c && c.saveData) ||
+            matchMedia('(prefers-reduced-motion: reduce)').matches ||
+            (n.deviceMemory || 8) < 4 ||
+            (n.hardwareConcurrency || 4) < 4
+          )
+            d.classList.add('lite');
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
