@@ -61,7 +61,7 @@ const jsonLd = {
         addressRegion: perfil.region,
         addressCountry: perfil.paisCodigo,
       },
-      worksFor: { '@type': 'Organization', name: sumari.nombre, url: sumari.url },
+      worksFor: { '@type': 'Organization', name: sumari.nombre, url: sumari.url, sameAs: [sumari.playStore] },
       knowsAbout: [...perfil.temas, ...stack.flatMap((g) => g.tecnologias)],
       sameAs: redes.map((r) => r.url),
       ...(perfil.foto ? { image: new URL(perfil.foto, site).href } : {}),

@@ -29,12 +29,14 @@ export const sumari = {
   nombre: 'Sumari',
   url: 'https://sumariapp.com',
   urlVisible: 'sumariapp.com',
+  /** Ficha en Google Play (la misma que enlaza la web de Sumari). */
+  playStore: 'https://play.google.com/store/apps/details?id=com.sumari.app',
   descripcion:
     'App de finanzas personales que reúne bolívares, dólares, USDT y euros en un solo total a la tasa del día.',
   /** Texto del bloque "Qué construyo", en primera persona. */
   intro:
     'Estoy construyendo Sumari, una app de finanzas personales que reúne bolívares, dólares, USDT y euros en un solo total a la tasa del día. La hago para la forma en que la gente en Venezuela maneja de verdad su dinero.',
-  estado: 'En desarrollo · Google Play y App Store, próximamente',
+  estado: 'Disponible en Android · App Store, próximamente',
 } as const;
 
 export interface Red {
@@ -78,7 +80,7 @@ export const hitos: Hito[] = [
     titulo: 'Funda Sumari',
     detalle: 'Finanzas personales para quien maneja su dinero en bolívares, dólares, USDT y euros.',
   },
-  { n: 4, anio: 'Próximamente', titulo: 'Lanzamiento de Sumari', detalle: 'En Google Play y App Store.' },
+  { n: 4, anio: '2026', titulo: 'Lanza Sumari en Google Play', detalle: 'Disponible en Android; la versión para iPhone, próximamente.' },
 ];
 
 export interface Grupo {

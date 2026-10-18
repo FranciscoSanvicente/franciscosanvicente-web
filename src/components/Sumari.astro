@@ -35,9 +35,14 @@ import { sumari } from '../data/perfil';
     </p>
 
     <div class="sumari__pie">
-      <a class="link-arrow sumari__enlace" href={sumari.url}>
-        {sumari.urlVisible}<span class="arrow sumari__flecha" aria-hidden="true">↗</span>
-      </a>
+      <div class="sumari__enlaces">
+        <a class="link-arrow sumari__enlace" href={sumari.url}>
+          {sumari.urlVisible}<span class="arrow sumari__flecha" aria-hidden="true">↗</span>
+        </a>
+        <a class="link-arrow sumari__enlace" href={sumari.playStore}>
+          Google Play<span class="arrow sumari__flecha" aria-hidden="true">↗</span>
+        </a>
+      </div>
       <p class="t-meta">{sumari.estado}</p>
     </div>
   </div>
@@ -89,6 +94,13 @@ import { sumari } from '../data/perfil';
     display: grid;
     justify-items: start;
     gap: var(--s-1);
+  }
+
+  /* Web y ficha de Google Play: los dos son "su enlace" (presupuesto de ámbar, handoff §7). */
+  .sumari__enlaces {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: var(--s-5);
   }
 
   /* inline-block (no flex) para que el subrayado no pase bajo la "↗"; el padding lleva el área

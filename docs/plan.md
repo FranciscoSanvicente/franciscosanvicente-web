@@ -78,4 +78,4 @@ hecha para la forma en que la gente en Venezuela maneja de verdad su dinero.
 1. 2020 — Empieza a programar.
 2. 2020–2026 — Desarrollador full stack en equipos de producto (proyectos bajo confidencialidad).
 3. 2026 — Funda Sumari.
-4. Próximamente — Lanzamiento de Sumari en Google Play y App Store.
+4. 2026 — Lanza Sumari en Google Play (App Store, próximamente).
