@@ -50,7 +50,7 @@ const REDES: Red[] = [
   { nombre: 'LinkedIn', url: 'https://www.linkedin.com/in/francisco-sanvicente-147879408/' },
   { nombre: 'GitHub', url: 'https://github.com/FranciscoSanvicente' },
   { nombre: 'X', url: '' },
-  { nombre: 'Instagram', url: '' },
+  { nombre: 'Instagram', url: 'https://www.instagram.com/fsanvicentedev/' },
   { nombre: 'TikTok', url: '' },
   { nombre: 'YouTube', url: '' },
 ];

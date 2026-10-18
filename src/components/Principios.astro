@@ -1,7 +1,7 @@
 ---
-/* "Cómo pienso" (docs/design/handoff.md §4, Principios). Tres posiciones de Francisco como dueño
-   de Sumari, sacadas de los principios ya documentados del producto. Viven aquí y no en
-   src/data/perfil.ts porque solo esta sección las pinta. */
+/* "Cómo pienso" (docs/design/handoff.md §4, Principios). Tres posiciones de Francisco sobre cómo
+   construye software, como ingeniero y no solo como dueño de Sumari (handoff v2). Borrador para
+   que él las revise. Viven aquí y no en src/data/perfil.ts porque solo esta sección las pinta. */
 
 interface Posicion {
   /** Índice visible: capa 05 → 5.1, 5.2, 5.3. */
@@ -13,21 +13,21 @@ interface Posicion {
 const POSICIONES: Posicion[] = [
   {
     indice: '5.1',
-    afirmacion: 'Cada número tiene que decir de dónde sale.',
+    afirmacion: 'Primero lo que resuelve el problema.',
     detalle:
-      'En Sumari cada tasa lleva su nombre real: BCV, Euro BCV, USDT P2P. Si el asistente no tiene el dato, lo dice; no lo inventa.',
+      'Prefiero lanzar algo pequeño que funcione bien a prometer algo grande. Lo demás llega cuando hace falta de verdad.',
   },
   {
     indice: '5.2',
-    afirmacion: 'Lo privado se procesa en tu teléfono.',
+    afirmacion: 'Construyo pensando en el teléfono que la gente tiene en la mano.',
     detalle:
-      'El audio y la foto del comprobante no salen de ahí; a la IA solo viaja el texto. Y no se venden los datos de nadie.',
+      'Equipos de gama media, conexiones que se caen y datos caros. Si una app va bien ahí, va bien en cualquier lado.',
   },
   {
     indice: '5.3',
-    afirmacion: 'Construyo para las cuentas que de verdad se hacen en Venezuela.',
+    afirmacion: 'Me hago cargo de todo el camino.',
     detalle:
-      'Bolívares en el banco, dólares en efectivo, USDT y a veces euros. Sumari anota ese dinero y lo suma a la tasa del día; no lo mueve ni promete rendimientos.',
+      'La pantalla, la API, la base de datos y el despliegue. Ver el producto completo me deja tomar mejores decisiones en cada parte.',
   },
 ];
 ---
