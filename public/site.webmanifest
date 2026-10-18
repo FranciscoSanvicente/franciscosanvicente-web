@@ -1,0 +1,15 @@
+{
+  "name": "Francisco Sanvicente",
+  "short_name": "F. Sanvicente",
+  "description": "Ingeniero de software en Puerto Ordaz, Venezuela. Creador de Sumari.",
+  "lang": "es",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#0B0C0E",
+  "theme_color": "#0B0C0E",
+  "icons": [
+    { "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any" },
+    { "src": "/icon-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/icon-512.png", "type": "image/png", "sizes": "512x512" }
+  ]
+}

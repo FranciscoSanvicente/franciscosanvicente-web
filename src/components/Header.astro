@@ -15,7 +15,7 @@ const secciones = [
 <header class="header container">
   <p class="header__lugar eyebrow">{perfil.ciudad}, {perfil.paisCodigo}</p>
   <nav class="header__nav" aria-label="Secciones">
-    <ul>
+    <ul role="list">
       {
         secciones.map((s) => (
           <li>
@@ -25,13 +25,43 @@ const secciones = [
       }
     </ul>
   </nav>
+  {/* Pausa del giro de la pila (WCAG 2.2.2): solo existe cuando hay escena 3D. Empieza oculto y el
+      script lo muestra; el estado se recuerda en localStorage y el <head> lo aplica antes de pintar. */}
+  <button type="button" class="header__pausa" aria-pressed="false" aria-label="Pausar animación" hidden>
+    {/* Icono de estado: dos barras mientras gira; triángulo cuando está pausada (pulsar = reanudar). */}
+    <svg class="pausa__icono" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">
+      <g class="pausa__barras"><rect x="3" y="2" width="3.5" height="12" rx="1"></rect><rect x="9.5" y="2" width="3.5" height="12" rx="1"></rect></g>
+      <path class="pausa__play" d="M4 2.5v11a1 1 0 0 0 1.5.86l9-5.5a1 1 0 0 0 0-1.72l-9-5.5A1 1 0 0 0 4 2.5Z"></path>
+    </svg>
+  </button>
 </header>
+
+<script>
+  const raiz = document.documentElement;
+  const boton = document.querySelector<HTMLButtonElement>('.header__pausa');
+  if (boton && !raiz.classList.contains('lite')) {
+    boton.hidden = false;
+    boton.setAttribute('aria-pressed', String(raiz.classList.contains('pausa')));
+    boton.addEventListener('click', () => {
+      const pausada = !raiz.classList.contains('pausa');
+      raiz.classList.toggle('pausa', pausada);
+      boton.setAttribute('aria-pressed', String(pausada));
+      try {
+        localStorage.setItem('pila-pausa', pausada ? '1' : '0');
+      } catch {
+        /* sin almacenamiento: vale para esta visita */
+      }
+      dispatchEvent(new Event('pila:pausa'));
+    });
+  }
+</script>
 
 <style>
   .header {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: var(--s-5);
+    gap: 0 var(--s-5);
     padding-block: var(--s-5);
   }
 
@@ -46,7 +76,8 @@ const secciones = [
 
   .header__nav ul {
     display: flex;
-    gap: var(--s-5);
+    flex-wrap: wrap;
+    gap: 0 var(--s-4);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -68,9 +99,50 @@ const secciones = [
     color: var(--ink);
   }
 
+  /* Botón de icono de 44 px: no fuerza una segunda línea en la cabecera de un móvil. */
+  .header__pausa {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-inline-end: -14px; /* el icono queda alineado con el borde del contenido */
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ink3);
+    cursor: pointer;
+    transition: color 160ms ease-out;
+  }
+
+  .header__pausa:hover {
+    color: var(--ink);
+  }
+
+  .pausa__icono {
+    fill: currentColor;
+  }
+
+  .pausa__play,
+  .header__pausa[aria-pressed='true'] .pausa__barras {
+    display: none;
+  }
+
+  .header__pausa[aria-pressed='true'] .pausa__play {
+    display: inline;
+  }
+
+  /* Si el modo ligero llega después (la escena no pudo cargar), el botón ya no tiene sentido. */
+  :global(html.lite) .header__pausa {
+    display: none;
+  }
+
   @media (min-width: 48rem) {
     .header__lugar {
       display: block;
+    }
+
+    .header__nav ul {
+      column-gap: var(--s-5);
     }
   }
 </style>

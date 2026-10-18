@@ -8,3 +8,34 @@
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
   Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# Sin hash en el nombre: caché de un día, para que una regeneración (pnpm og / poster / icons) se vea pronto.
+/og/*
+  Cache-Control: public, max-age=86400
+/poster/*
+  Cache-Control: public, max-age=86400
+/favicon.svg
+  Cache-Control: public, max-age=86400
+/favicon-48.png
+  Cache-Control: public, max-age=86400
+/apple-touch-icon.png
+  Cache-Control: public, max-age=86400
+
+# Superficie de captura de la imagen OG: nunca en buscadores (además de su meta noindex).
+/og-card
+  X-Robots-Tag: noindex, nofollow
+/og-card/
+  X-Robots-Tag: noindex, nofollow
+
+# Texto plano en UTF-8: las cabeceras de los endpoints de Astro no llegan a producción.
+/robots.txt
+  Content-Type: text/plain; charset=utf-8
+# llms.txt es para asistentes, no para salir como resultado junto a la home.
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+  X-Robots-Tag: noindex
+
+# Despliegues de vista previa (<hash>.<proyecto>.pages.dev): copias de la web, fuera de Google.
+# El .pages.dev de producción no va aquí: recibe el 301 al dominio (README → Lanzamiento).
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex

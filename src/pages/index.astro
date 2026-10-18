@@ -13,10 +13,14 @@ import Stack from '../components/Stack.astro';
 import Principios from '../components/Principios.astro';
 import Contacto from '../components/Contacto.astro';
 import Footer from '../components/Footer.astro';
-import { perfil } from '../data/perfil';
+import { perfil, sumari } from '../data/perfil';
 ---
 
-<Base title={`${perfil.nombre} — ${perfil.rol}`} description={perfil.bioCorta} preloadImage="/poster/pila.avif">
+<Base
+  title={`${perfil.nombre} — ${perfil.rol}, creador de ${sumari.nombre}`}
+  description={perfil.descripcion}
+  preloadImage="/poster/pila.avif"
+>
   <Escenario />
   <Header />
   <main id="contenido">

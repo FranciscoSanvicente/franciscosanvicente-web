@@ -19,7 +19,7 @@ const pose = (o: Partial<StackPose>): StackPose => ({
 });
 
 export const PAISAJE: Record<Clave, StackPose> = {
-  inicio: pose({ x: 0.78, y: 0.48, h: 0.9, open: 1 }),
+  inicio: pose({ x: 0.78, y: 0.55, h: 0.8, open: 1 }),
   servicios: pose({ x: 0.76, y: 0.5, h: 0.6, ...TRES_CUARTOS, open: 1.6 }),
   sumari: pose({ x: 0.77, y: 0.5, h: 0.62, ...FRENTE }),
   trayectoria: pose({ x: 0.76, y: 0.5, h: 0.7 }),
@@ -29,7 +29,7 @@ export const PAISAJE: Record<Clave, StackPose> = {
 };
 
 export const RETRATO: Record<Clave, StackPose> = {
-  inicio: pose({ x: 0.6, y: 0.34, h: 0.44, open: 1 }),
+  inicio: pose({ x: 0.6, y: 0.37, h: 0.42, open: 1 }),
   servicios: pose({ x: 0.5, y: 0.3, h: 0.36, ...TRES_CUARTOS, open: 1.6 }),
   sumari: pose({ x: 0.5, y: 0.28, h: 0.42, ...FRENTE }),
   trayectoria: pose({ x: 0.5, y: 0.3, h: 0.44 }),

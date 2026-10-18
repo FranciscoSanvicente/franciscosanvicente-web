@@ -82,6 +82,20 @@ check(!/og-card|\/404/.test(sitemap ?? ''),'el sitemap incluye og-card o la 404'
 const existe = (r) => access(new URL(`../${r}`, import.meta.url)).then(() => true, () => false);
 check(await existe('public/og/default.png'), 'falta public/og/default.png (pnpm og)');
 
+// ── Persona para buscadores e IA: ProfilePage, fundador de Sumari, bio visible, llms.txt, robots ──
+const pagina = grafo.find((n) => n['@type'] === 'ProfilePage');
+check(pagina?.mainEntity?.['@id'] === persona?.['@id'], 'falta ProfilePage con mainEntity = Person');
+check(
+  grafo.some((n) => n['@type'] === 'Organization' && n.founder?.['@id'] === persona?.['@id']),
+  'Sumari no declara a Francisco como founder',
+);
+check(/Francisco Sanvicente es /.test(visible), 'la bio larga no está en el HTML');
+const llms = await leer('dist/llms.txt');
+check(llms?.startsWith('# Francisco Sanvicente') ?? false, 'falta dist/llms.txt');
+const robots = await leer('dist/robots.txt');
+check(robots !== null && !/^Disallow:\s*\/\s*$/m.test(robots), 'robots.txt bloquea el sitio');
+check(/User-agent: GPTBot/.test(robots ?? ''), 'robots.txt no nombra a los bots de IA');
+
 if (fallos.length) {
   console.error(`✗ ${fallos.length} comprobación(es) fallaron:\n  - ${fallos.join('\n  - ')}`);
   process.exit(1);

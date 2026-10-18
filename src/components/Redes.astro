@@ -13,7 +13,7 @@ const { label = 'Redes' } = Astro.props;
 
 {
   redes.length > 0 && (
-    <ul class="redes" aria-label={label}>
+    <ul class="redes" role="list" aria-label={label}>
       {redes.map((red) => (
         <li>
           <a class="link-arrow" href={red.url} rel="me">
@@ -49,7 +49,7 @@ const { label = 'Redes' } = Astro.props;
 
   .redes__nombre {
     text-decoration: underline;
-    text-decoration-color: var(--border2);
+    text-decoration-color: color-mix(in srgb, currentColor 55%, transparent);
     text-underline-offset: 0.2em;
     transition: text-decoration-color 160ms ease-out;
   }

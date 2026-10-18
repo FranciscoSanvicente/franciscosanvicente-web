@@ -26,6 +26,7 @@ pnpm shots     # capturas 375/1280 en oscuro, claro y movimiento reducido (con p
 pnpm audit     # LCP, CLS, peso y axe contra los presupuestos (con preview en marcha)
 pnpm og        # regenera public/og/default.png desde /og-card (con dev o preview en marcha)
 pnpm poster    # regenera el póster de la pila desde la escena 3D
+pnpm icons     # regenera los PNG de los íconos desde public/favicon.svg
 ```
 
 Datos de Francisco (bio, redes, hitos, foto) en un solo archivo: `src/data/perfil.ts`. Para
@@ -71,7 +72,16 @@ Lo hace Francisco desde sus cuentas, en este orden:
 6. **Validar:** la [prueba de resultados enriquecidos](https://search.google.com/test/rich-results)
    con la URL pública (debe detectar `Person`) y el inspector de publicaciones de LinkedIn para ver
    la tarjeta OG.
-7. **Enlazar desde cada red:** poner `https://franciscosanvicente.com` en la bio de LinkedIn,
+7. **Bots de IA en Cloudflare:** en la zona del dominio, Security → Bots / AI Crawl Control:
+   dejar **desactivados** "Block AI bots" y el "Managed robots.txt" (Cloudflare los activa a veces
+   por defecto y se imponen a nuestro `robots.txt`). Comprobar con
+   `curl https://franciscosanvicente.com/robots.txt` que sale el nuestro, con GPTBot, ClaudeBot y
+   PerplexityBot permitidos. Activar también **Crawler Hints** (IndexNow).
+8. **Bing Webmaster Tools:** importar la propiedad desde Search Console. ChatGPT search y Copilot
+   se apoyan en el índice de Bing.
+9. **Señal recíproca en sumariapp.com:** añadir `founder` con `@id`
+   `https://franciscosanvicente.com/#persona` a su Organization y un enlace visible a esta web.
+10. **Enlazar desde cada red:** poner `https://franciscosanvicente.com` en la bio de LinkedIn,
    GitHub y las redes nuevas, con el nombre visible "Francisco Sanvicente". Cada red nueva se añade
    también en `src/data/perfil.ts`.
 

@@ -6,7 +6,7 @@
 
    Contrato DOM que lee el cargador 3D: `#trayectoria [data-hito="1".."4"]`. No cambiar el id ni
    esos atributos. */
-import { hitos } from '../data/perfil';
+import { hitos, perfil } from '../data/perfil';
 import Glifo from './Glifo.astro';
 ---
 
@@ -14,10 +14,12 @@ import Glifo from './Glifo.astro';
   <div class="escena" aria-hidden="true"></div>
   <div class="zona">
   <div class="section-head">
-    <p class="eyebrow">capa 03</p>
+    <p class="eyebrow" aria-hidden="true">capa 03</p>
     <h2 id="h-trayectoria" class="t-h2">Trayectoria</h2>
   </div>
-  <ol class="hitos">
+  {/* La bio en prosa y en tercera persona: es lo que citan buscadores y asistentes de IA. */}
+  <p class="t-body trayectoria__bio">{perfil.bioLarga}</p>
+  <ol class="hitos" role="list">
     {
       hitos.map((h) => (
         <li class="hito" data-hito={h.n}>
@@ -35,6 +37,13 @@ import Glifo from './Glifo.astro';
 </section>
 
 <style>
+  .trayectoria__bio {
+    max-width: 65ch;
+    margin-bottom: var(--s-8);
+    color: var(--ink2);
+    text-wrap: pretty;
+  }
+
   .hitos {
     display: grid;
     gap: var(--s-8);

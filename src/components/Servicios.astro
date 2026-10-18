@@ -28,7 +28,7 @@ const SERVICIOS = [
   <div class="escena" aria-hidden="true"></div>
   <div class="zona">
     <div class="section-head reveal">
-      <p class="eyebrow">capa 01</p>
+      <p class="eyebrow" aria-hidden="true">capa 01</p>
       <h2 id="h-servicios" class="t-h2">Qué puedo construir para ti</h2>
     </div>
 
@@ -36,7 +36,7 @@ const SERVICIOS = [
       {
         SERVICIOS.map((s, i) => (
           <li class="servicio reveal" style={`--reveal-i: ${i}`}>
-            <p class="eyebrow">1.{i + 1}</p>
+            <p class="eyebrow" aria-hidden="true">1.{i + 1}</p>
             <h3 class="t-statement">{s.titulo}</h3>
             <p class="t-body servicio__detalle">{s.detalle}</p>
           </li>

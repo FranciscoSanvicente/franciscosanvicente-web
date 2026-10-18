@@ -16,7 +16,7 @@ const dominio = arroba > 0 ? perfil.correo.slice(arroba + 1) : '';
   <div class="escena" aria-hidden="true"></div>
   <div class="zona">
   <div class="section-head">
-    <p class="eyebrow">capa 06</p>
+    <p class="eyebrow" aria-hidden="true">capa 06</p>
     <h2 id="h-contacto" class="t-h2">Contacto</h2>
   </div>
 
@@ -83,7 +83,7 @@ const dominio = arroba > 0 ? perfil.correo.slice(arroba + 1) : '';
     font-size: 0.9375rem;
     font-weight: 500;
     text-decoration: underline;
-    text-decoration-color: var(--border2);
+    text-decoration-color: color-mix(in srgb, currentColor 55%, transparent);
     text-underline-offset: 0.2em;
     cursor: pointer;
     transition-property: color, text-decoration-color;
@@ -120,7 +120,7 @@ const dominio = arroba > 0 ? perfil.correo.slice(arroba + 1) : '';
         await navigator.clipboard.writeText(correo);
         mensaje = 'Copiado';
       } catch {
-        mensaje = 'No se pudo copiar. Toca el correo para escribirme.';
+        mensaje = 'No se pudo copiar. Pulsa el correo para escribirme.';
       }
       // Vaciar antes de escribir hace que se anuncie de nuevo aunque el texto se repita.
       estado.textContent = '';

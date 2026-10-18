@@ -3,9 +3,10 @@
    la pila vive en el escenario fijo detrás (Escenario.astro) y su base asoma tras «Sanvicente». El
    H1 nunca lleva `.reveal`: es el LCP y se pinta con el primer render.
 
-   Legibilidad: un velo (`::before`, detrás del texto y delante del canvas) protege el nombre. En
-   escritorio es horizontal (fondo → velo → transparente hacia la pila); en retrato es vertical
-   (la pila arriba, el texto anclado abajo desde ~54svh).
+   Legibilidad: un velo (`::before` del bloque de texto, detrás del texto y delante del canvas)
+   protege nombre, lede y redes. Sigue al bloque, no a porcentajes de la pantalla: en retrato cubre
+   el texto a todo el ancho y se funde 3rem por encima; en escritorio llega hasta el final del
+   apellido y se funde en 4vw, así la base de la pila queda tras la «e» sin que nada se lea mal.
 
    Sin JS o en modo ligero (`html.lite`) no hay escenario: el hero pinta su propio póster, a la
    derecha en escritorio y bajo las redes en móvil. No es perezoso: en móvil es el LCP. */
@@ -14,16 +15,18 @@ import { perfil, redes } from '../data/perfil';
 ---
 
 <section id="inicio" class="hero container" data-clave="inicio" aria-labelledby="nombre">
-  <h1 id="nombre" class="hero__nombre t-name">{perfil.nombre}</h1>
-  <p class="hero__lede t-lede reveal" style="--reveal-i:0">{perfil.lede}</p>
-  {/* Sin redes con URL no se pinta el envoltorio: así no queda un hueco de `--s-7` vacío. */}
-  {
-    redes.length > 0 && (
-      <div class="hero__redes reveal" style="--reveal-i:1">
-        <Redes label="Redes de Francisco" />
-      </div>
-    )
-  }
+  <div class="hero__texto">
+    <h1 id="nombre" class="hero__nombre t-name">{perfil.nombre}</h1>
+    <p class="hero__lede t-lede reveal" style="--reveal-i:0">{perfil.lede}</p>
+    {/* Sin redes con URL no se pinta el envoltorio: así no queda un hueco de `--s-7` vacío. */}
+    {
+      redes.length > 0 && (
+        <div class="hero__redes reveal" style="--reveal-i:1">
+          <Redes label="Redes de Francisco" />
+        </div>
+      )
+    }
+  </div>
   <picture class="hero__poster">
     <source srcset="/poster/pila.avif" type="image/avif" />
     <img src="/poster/pila.webp" width="960" height="960" alt="" decoding="async" />
@@ -54,14 +57,21 @@ import { perfil, redes } from '../data/perfil';
     margin-top: var(--s-7);
   }
 
-  /* Velo: solo cuando hay escenario detrás. Ocupa todo el ancho de la ventana. */
-  :global(html.js:not(.lite)) .hero::before {
+  .hero__texto {
+    position: relative;
+    justify-self: start;
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  /* Velo: solo cuando hay escenario detrás. En retrato, a todo el ancho de la ventana. */
+  :global(html.js:not(.lite)) .hero__texto::before {
     content: '';
     position: absolute;
-    inset: 0 auto 0 calc(50% - 50vw);
+    inset: -3rem auto calc(-1 * var(--s-8)) calc(-1 * var(--gutter));
     width: 100vw;
     z-index: -1;
-    background: linear-gradient(to bottom, transparent 46%, var(--scrim) 54%);
+    background: linear-gradient(to bottom, transparent, var(--scrim) 3rem);
   }
 
   /* Póster propio solo sin escenario (sin JS o modo ligero). */
@@ -87,15 +97,12 @@ import { perfil, redes } from '../data/perfil';
       padding-top: 0;
     }
 
-    /* Fondo hasta 35vw, velo bajo el final del apellido (~55vw) y transparente antes de la pila
-       (~64vw): si el velo la alcanza, en tema claro la lava con un degradado blanco. */
-    :global(html.js:not(.lite)) .hero::before {
-      background: linear-gradient(
-        to right,
-        var(--bg) 35vw,
-        var(--scrim) 55vw,
-        transparent 64vw
-      );
+    /* Escritorio: desde el borde de la ventana hasta el final del bloque de texto, y 4vw de fundido. */
+    :global(html.js:not(.lite)) .hero__texto::before {
+      inset: -2rem auto -2rem calc(50% - 50vw);
+      width: auto;
+      right: -4vw;
+      background: linear-gradient(to left, transparent, var(--scrim) 4vw);
     }
 
     /* Sin escenario, el póster va a la derecha, en el sitio de la pila. */

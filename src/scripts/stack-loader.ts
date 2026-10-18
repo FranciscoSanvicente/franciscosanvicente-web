@@ -7,10 +7,14 @@
    - Si no, tras `load` + el primer idle se comprueba WebGL2 y se pide el chunk de la escena. El
      canvas funde sobre el póster fijo; el layout no cambia nunca (las ventanas de retrato ya están).
    - Rendimiento: con frames > 28 ms sostenidos 2 s pasa a calidad baja (DPR 1, sin giro) y lo
-     recuerda en la sesión; si aun así > 50 ms, se apaga y vuelve el póster. Sin reintento. */
+     recuerda en la sesión; si aun así > 50 ms, se apaga. Sin reintento.
+   - Accesibilidad: la opacidad del escenario sigue al scroll desde el arranque (antes de que exista
+     la escena), para que el póster nunca quede a plena opacidad detrás del texto. Si la escena no
+     puede existir o se apaga, la página pasa a `html.lite` (póster en el hero, sin ventanas). El
+     giro se detiene con `html.pausa` (botón de la cabecera, WCAG 2.2.2). */
 import type { StackQuality, StackScene, StackTheme } from '../three/types';
-import { capable, clamp01, easeOutCubic, estado, type Caja, type Medidas } from './stack-pose';
-import type { Clave } from './waypoints';
+import { medir as medirDom } from './stack-medidas';
+import { capable, clamp01, easeOutCubic, estado, type Medidas } from './stack-pose';
 
 const SPIN_MS = 600;
 const LENTO_MS = 28;
@@ -40,31 +44,6 @@ let medidas: Medidas | null = null;
 let frame = 0;
 let monitor = 0;
 
-/* ---- Medidas cacheadas: ningún getBoundingClientRect por frame. ---- */
-const caja = (el: Element): Caja => {
-  const r = el.getBoundingClientRect();
-  return { top: r.top + scrollY, height: r.height };
-};
-
-function medir() {
-  const secciones = [...document.querySelectorAll<HTMLElement>('main [data-clave]')].map((el) => ({
-    clave: el.dataset.clave as Clave,
-    ...caja(el),
-  }));
-  const hero = document.querySelector('[data-clave="inicio"]');
-  const ventanas = [...document.querySelectorAll('.escena')].map(caja);
-  if (hero) {
-    const c = caja(hero);
-    ventanas.unshift({ top: c.top, height: c.height * 0.5 });
-  }
-  medidas = {
-    secciones,
-    hitos: [...document.querySelectorAll('#trayectoria [data-hito]')].map(caja),
-    servicios: [...document.querySelectorAll('#servicios .servicio')].map(caja),
-    ventanas,
-  };
-}
-
 /* ---- Giro: por tiempo, del valor actual al objetivo con easeOutCubic. ---- */
 let spin = 0;
 let spinTarget = Number.NaN;
@@ -90,16 +69,23 @@ function aimSpin(target: number) {
 /* ---- Un frame de scroll: estado → escena y opacidad del canvas. ---- */
 function update() {
   frame = 0;
-  if (!scene || !canvas) return;
-  if (!medidas) medir();
-  const e = estado(scrollY, innerHeight, canvas.clientHeight || innerHeight, medidas!, !wide.matches);
-  scene.setPose(e.pose);
-  aimSpin(calidad === 'low' ? 0 : e.spin);
+  if (!canvas || raiz.classList.contains('lite')) return;
+  medidas ??= medirDom();
+  const alto = canvas.parentElement?.clientHeight || innerHeight;
+  const e = estado(scrollY, innerHeight, alto, medidas!, !wide.matches);
   canvas.parentElement?.style.setProperty('--alfa', e.alpha.toFixed(3));
+  if (!scene) return;
+  scene.setPose(e.pose);
+  aimSpin(calidad === 'low' || raiz.classList.contains('pausa') ? 0 : e.spin);
 }
 const schedule = () => {
-  if (scene && !frame) frame = requestAnimationFrame(update);
+  if (!frame) frame = requestAnimationFrame(update);
 };
+
+/** Sin escena posible: modo ligero, el mismo que decide el <head> (póster en el hero, sin ventanas). */
+function sinEscena() {
+  raiz.classList.add('lite');
+}
 
 /* ---- Rendimiento ---- */
 function vigilar() {
@@ -140,6 +126,7 @@ function apagar() {
   poster?.classList.remove('is-covered');
   canvas?.classList.remove('is-live');
   if (canvas) canvas.hidden = true;
+  sinEscena();
 }
 
 function visibilidad() {
@@ -154,14 +141,15 @@ function visibilidad() {
 }
 
 async function montar() {
-  if (!canvas || !capable()) return;
+  if (!canvas) return;
+  if (!capable()) return sinEscena();
   const { createStackScene } = await import('../three/stack');
-  if (reduced.matches) return;
+  if (reduced.matches) return sinEscena();
   canvas.hidden = false;
   try {
     scene = createStackScene(canvas, { theme: theme(), quality: calidad });
     scene.resize();
-    medir();
+    medidas = medirDom();
     update();
     visibilidad();
   } catch {
@@ -169,15 +157,10 @@ async function montar() {
   }
   // Ancho u orientación → tamaño del canvas; cualquier reflujo del documento → medidas.
   new ResizeObserver(() => scene?.resize()).observe(canvas);
-  new ResizeObserver(() => {
-    medidas = null;
-    schedule();
-  }).observe(document.body);
-  addEventListener('scroll', schedule, { passive: true });
-  wide.addEventListener('change', schedule);
   reduced.addEventListener('change', () => reduced.matches && apagar());
   dark.addEventListener('change', () => scene?.setTheme(theme()));
   document.addEventListener('visibilitychange', visibilidad);
+  addEventListener('pila:pausa', schedule);
   // Dos frames: el canvas ya pintó al menos uno antes de fundirse sobre el póster.
   requestAnimationFrame(() =>
     requestAnimationFrame(() => {
@@ -189,6 +172,14 @@ async function montar() {
 }
 
 if (canvas && !raiz.classList.contains('lite')) {
+  // La opacidad sigue al scroll desde ya; la escena llega después.
+  new ResizeObserver(() => {
+    medidas = null;
+    schedule();
+  }).observe(document.body);
+  addEventListener('scroll', schedule, { passive: true });
+  wide.addEventListener('change', schedule);
+  schedule();
   const arrancar = () => {
     const idle = (cb: () => void) =>
       'requestIdleCallback' in window ? requestIdleCallback(cb, { timeout: 3000 }) : setTimeout(cb, 1500);

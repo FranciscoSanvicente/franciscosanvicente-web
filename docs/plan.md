@@ -58,6 +58,9 @@ Las magnitudes son de nivel proyecto (aproximadas, sin desglose en horas).
 ## Pendiente de Francisco
 
 - Revisar el borrador de "Cómo pienso" (`src/components/Principios.astro`).
+- Foto de retrato cuadrada (~1200 px, idealmente la misma de LinkedIn/GitHub): entra en el JSON-LD.
+- Alias real si lo hay (`perfil.alias`, por ejemplo "fsanvicentedev").
+- Cloudflare (bots de IA, Crawler Hints), Bing Webmaster y el `founder` en sumariapp.com: README.
 
 - Foto (no bloquea la fase 1).
 - Usuario de redes: `@fransanvicente`; alternativas `@sanvicentefco`, `@fsanvicentedev`.

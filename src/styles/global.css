@@ -38,7 +38,7 @@
     --ink: #100e08;
     --ink2: #17150f;
     --ink3: #4f4a41;
-    --ink4: #66604f;
+    --ink4: #585244; /* 4.5:1 también sobre la pila al 10 % detrás del texto */
     --amber: #c6851e;
     --amberText: #8a5e06;
     --focus: #8a5e06;
@@ -55,6 +55,8 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  /* Los velos a ancho de ventana (100vw incluye la barra de scroll) no crean scroll horizontal. */
+  overflow-x: clip;
 }
 
 body {
@@ -86,7 +88,8 @@ p {
 
 a {
   color: var(--ink);
-  text-decoration-color: var(--border2);
+  /* Subrayado visible en reposo (distingue el enlace del texto), pleno al pasar. */
+  text-decoration-color: color-mix(in srgb, currentColor 55%, transparent);
   text-underline-offset: 0.2em;
 }
 
@@ -364,5 +367,20 @@ html.js .reveal.is-in {
   .link-arrow:hover .arrow,
   .link-arrow:focus-visible .arrow {
     transform: none;
+  }
+}
+
+/* Imprimir: todo visible, sin escenario. */
+@media print {
+  html.js .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Colores forzados o más contraste: sin capa 3D detrás del texto (el <head> también activa lite). */
+@media (forced-colors: active), (prefers-contrast: more) {
+  .escenario {
+    display: none !important;
   }
 }

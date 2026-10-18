@@ -15,7 +15,7 @@ export const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
 const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2);
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-const ALFA_LECTURA = 0.14;
+const ALFA_LECTURA = 0.1;
 
 type Nav = Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } };
 

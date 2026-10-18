@@ -5,7 +5,8 @@ import '@fontsource-variable/space-grotesk';
 import '../styles/global.css';
 // El nombre en Bricolage es el LCP: se precarga solo su archivo latino.
 import displayFont from '@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2?url';
-import { perfil, sumari, redes, stack } from '../data/perfil';
+import { perfil } from '../data/perfil';
+import { grafoPerfil } from '../data/jsonld';
 
 interface Props {
   title: string;
@@ -43,44 +44,8 @@ const {
 // Las redes leen la imagen desde fuera: tiene que ser absoluta.
 const imageURL = new URL(image, site).href;
 
-/* Datos estructurados: quién es Francisco y qué sitio es este, para que Google enlace la web con
-   sus redes (`sameAs`) en el panel de la persona. Todo sale de perfil.ts; una red sin URL ya viene
-   filtrada en `redes`, así que no llega aquí. */
-const personaId = `${site.href}#persona`;
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'Person',
-      '@id': personaId,
-      name: perfil.nombre,
-      url: site.href,
-      jobTitle: perfil.rol,
-      description: perfil.bioCorta,
-      email: `mailto:${perfil.correo}`,
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: perfil.ciudad,
-        addressRegion: perfil.region,
-        addressCountry: perfil.paisCodigo,
-      },
-      worksFor: { '@type': 'Organization', name: sumari.nombre, url: sumari.url, sameAs: [sumari.playStore] },
-      knowsAbout: [...perfil.temas, ...stack.flatMap((g) => g.tecnologias)],
-      sameAs: redes.map((r) => r.url),
-      ...(perfil.foto ? { image: new URL(perfil.foto, site).href } : {}),
-    },
-    {
-      '@type': 'WebSite',
-      '@id': `${site.href}#web`,
-      url: site.href,
-      name: perfil.nombre,
-      inLanguage: 'es',
-      publisher: { '@id': personaId },
-      about: { '@id': personaId },
-    },
-  ],
-};
-// Los datos son estáticos del repo, pero se escapa `<` para que nada pueda cerrar el <script>.
+// Datos estructurados (ProfilePage → Person → Organization Sumari + WebSite): src/data/jsonld.ts.
+const jsonLd = grafoPerfil({ site, canonical: canonicalURL, title, description, imagen: imageURL });
 const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
 ---
 
@@ -97,7 +62,11 @@ const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
     {preloadImage && <link rel="preload" href={preloadImage} as="image" type="image/avif" fetchpriority="high" />}
     <meta name="theme-color" content="#0B0C0E" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)" />
+    {/* PNG de respaldo (Safari, Bing) y SVG para el resto; los PNG los genera `pnpm icons`. */}
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
 
     {/* Open Graph (WhatsApp, LinkedIn, Facebook) y tarjeta de X. */}
     <meta property="og:type" content={ogType} />
@@ -129,9 +98,10 @@ const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
 
     {/* `html.js` habilita lo que solo tiene sentido con JS (revelados, botón Copiar). Va en línea y
         antes de pintar para que no haya parpadeo. */}
-    {/* `html.lite`: sin escenario 3D (ahorro de datos, movimiento reducido, poca memoria o pocos
-        núcleos). Se decide aquí, antes de pintar, para que las ventanas del 3D no aparezcan y
-        desaparezcan después (handoff v2 §6). */}
+    {/* `html.lite`: sin escenario 3D (ahorro de datos, movimiento reducido, colores forzados o más
+        contraste, poca memoria o pocos núcleos). Se decide aquí, antes de pintar, para que las
+        ventanas del 3D no aparezcan y desaparezcan después (handoff v2 §6). `html.pausa`: el giro
+        de la pila detenido por el botón de la cabecera (WCAG 2.2.2), recordado entre visitas. */}
     <script is:inline>
       (function () {
         var d = document.documentElement;
@@ -141,11 +111,12 @@ const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
           var c = n.connection;
           if (
             (c && c.saveData) ||
-            matchMedia('(prefers-reduced-motion: reduce)').matches ||
+            matchMedia('(prefers-reduced-motion: reduce), (forced-colors: active), (prefers-contrast: more)').matches ||
             (n.deviceMemory || 8) < 4 ||
             (n.hardwareConcurrency || 4) < 4
           )
             d.classList.add('lite');
+          if (localStorage.getItem('pila-pausa') === '1') d.classList.add('pausa');
         } catch (e) {}
       })();
     </script>

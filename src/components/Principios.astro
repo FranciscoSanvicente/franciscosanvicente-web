@@ -36,7 +36,7 @@ const POSICIONES: Posicion[] = [
   <div class="escena" aria-hidden="true"></div>
   <div class="principios grid">
     <div class="section-head principios__head">
-      <p class="eyebrow">capa 05</p>
+      <p class="eyebrow" aria-hidden="true">capa 05</p>
       <h2 id="h-principios" class="t-h2">Cómo pienso</h2>
     </div>
 
@@ -44,7 +44,7 @@ const POSICIONES: Posicion[] = [
       {
         POSICIONES.map((p, i) => (
           <li class="posicion reveal" style={`--reveal-i: ${i}`}>
-            <p class="eyebrow">{p.indice}</p>
+            <p class="eyebrow" aria-hidden="true">{p.indice}</p>
             <h3 class="t-statement">{p.afirmacion}</h3>
             <p class="t-body posicion__detalle">{p.detalle}</p>
           </li>
