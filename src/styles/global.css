@@ -164,6 +164,9 @@ a:hover {
   --s-9: 96px;
   --s-10: 128px;
   --section-y: clamp(5rem, 3rem + 8vw, 10rem);
+  /* Alto de la cabecera (enlaces de 44 px + --s-5 arriba y abajo): el hero lo descuenta para llenar
+     la primera pantalla sin empujar las redes bajo el pliegue. */
+  --header-h: calc(44px + 2 * var(--s-5));
 
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
 }

@@ -39,7 +39,6 @@ const {
 
 // Las redes leen la imagen desde fuera: tiene que ser absoluta.
 const imageURL = new URL(image, site).href;
-const [nombrePila, ...apellidos] = perfil.nombre.split(' ');
 
 /* Datos estructurados: quién es Francisco y qué sitio es este, para que Google enlace la web con
    sus redes (`sameAs`) en el panel de la persona. Todo sale de perfil.ts; una red sin URL ya viene
@@ -63,7 +62,7 @@ const jsonLd = {
         addressCountry: perfil.paisCodigo,
       },
       worksFor: { '@type': 'Organization', name: sumari.nombre, url: sumari.url },
-      knowsAbout: ['Desarrollo web', 'Desarrollo de aplicaciones móviles', 'Finanzas personales'],
+      knowsAbout: perfil.temas,
       sameAs: redes.map((r) => r.url),
       ...(perfil.foto ? { image: new URL(perfil.foto, site).href } : {}),
     },
@@ -111,8 +110,8 @@ const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
     {
       ogType === 'profile' && (
         <>
-          <meta property="profile:first_name" content={nombrePila} />
-          <meta property="profile:last_name" content={apellidos.join(' ')} />
+          <meta property="profile:first_name" content={perfil.nombrePila} />
+          <meta property="profile:last_name" content={perfil.apellidos} />
         </>
       )
     }

@@ -10,7 +10,6 @@ import '@fontsource-variable/space-grotesk';
 import '../styles/global.css';
 import { perfil } from '../data/perfil';
 
-const [nombrePila, ...apellidos] = perfil.nombre.split(' ');
 ---
 
 <!doctype html>
@@ -27,7 +26,7 @@ const [nombrePila, ...apellidos] = perfil.nombre.split(' ');
 
       <div class="pie">
         <div>
-          <h1 class="nombre">{nombrePila}<br />{apellidos.join(' ')}</h1>
+          <h1 class="nombre">{perfil.nombrePila}<br />{perfil.apellidos}</h1>
           <p class="rol">{perfil.rol}</p>
         </div>
 

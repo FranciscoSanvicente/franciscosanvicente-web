@@ -1,7 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Provisional: tres placas apiladas, la superior en ámbar (concepto "construir por capas"). -->
-  <rect width="64" height="64" rx="14" fill="#0B0C0E"/>
-  <rect x="14" y="40" width="36" height="7" rx="2" fill="#4F535A"/>
-  <rect x="14" y="29" width="36" height="7" rx="2" fill="#9AA0A6"/>
-  <rect x="14" y="18" width="36" height="7" rx="2" fill="#E7B857"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- La pila "por capas": la geometría de Sumari (base + tres chevrons) con solo la capa superior
+       en ámbar, como el póster y la tarjeta OG. -->
+  <rect width="100" height="100" rx="22" fill="#0B0C0E"/>
+  <g fill="none" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M24 82 H76" stroke="#5B6068"/>
+    <path d="M28 66 L50 56 L72 66" stroke="#7A8088"/>
+    <path d="M28 49 L50 39 L72 49" stroke="#9AA0A6"/>
+    <path d="M28 32 L50 22 L72 32" stroke="#E7B857"/>
+  </g>
 </svg>

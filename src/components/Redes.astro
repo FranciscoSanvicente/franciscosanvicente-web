@@ -17,7 +17,7 @@ const { label = 'Redes' } = Astro.props;
       {redes.map((red) => (
         <li>
           <a class="link-arrow" href={red.url} rel="me">
-            {red.nombre} <span class="arrow" aria-hidden="true">↗</span>
+            <span class="redes__nombre">{red.nombre}</span><span class="arrow" aria-hidden="true">↗</span>
           </a>
         </li>
       ))}
@@ -43,5 +43,19 @@ const { label = 'Redes' } = Astro.props;
     font-family: var(--font-mono);
     font-size: 0.9375rem;
     font-weight: 500;
+    /* El subrayado va solo bajo el nombre: en un inline-flex cruzaría también la flecha. */
+    text-decoration: none;
+  }
+
+  .redes__nombre {
+    text-decoration: underline;
+    text-decoration-color: var(--border2);
+    text-underline-offset: 0.2em;
+    transition: text-decoration-color 160ms ease-out;
+  }
+
+  .redes a:hover .redes__nombre,
+  .redes a:focus-visible .redes__nombre {
+    text-decoration-color: currentColor;
   }
 </style>

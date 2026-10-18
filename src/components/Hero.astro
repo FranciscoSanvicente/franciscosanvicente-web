@@ -55,10 +55,10 @@ import { perfil, redes } from '../data/perfil';
   }
 
   @media (min-width: 64rem) {
-    /* El hero llena la primera pantalla junto con la cabecera (enlaces de 44 px + `--s-5` arriba y
-       abajo, ver Header.astro); con `100svh` a secas las redes quedarían pegadas al pliegue. */
+    /* El hero llena la primera pantalla junto con la cabecera; con `100svh` a secas las redes
+       quedarían pegadas al pliegue. */
     .hero {
-      min-height: calc(100svh - (44px + 2 * var(--s-5)));
+      min-height: calc(100svh - var(--header-h));
       display: grid;
       align-content: end;
       padding-top: 0;

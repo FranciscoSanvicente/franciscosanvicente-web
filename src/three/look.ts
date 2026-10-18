@@ -3,9 +3,13 @@
 import { Color, DirectionalLight, HemisphereLight, MeshStandardMaterial, type Scene } from 'three';
 import type { StackTheme } from './types';
 
-const AMBAR = new Color(0xe7b857);
+/* El canto encendido tiene que leerse como el ámbar de marca (el mismo de global.css), no como un
+   dorado lavado: encendido no recibe luz (su difuso va a negro) y solo emite su color, fuera del tone
+   mapping. Así de frente la pila es el logo de Sumari tal cual. En claro va el ámbar de relleno del
+   tema claro, que es el que contrasta con el papel. */
+const AMBAR: Record<StackTheme, Color> = { dark: new Color(0xe7b857), light: new Color(0xc6851e) };
 const APAGADO = new Color(0x8a9099);
-const INTENSIDAD: Record<StackTheme, number> = { dark: 1.4, light: 0.9 };
+const NEGRO = new Color(0x000000);
 
 export const esTema = (t: unknown): t is StackTheme => t === 'dark' || t === 'light';
 
@@ -24,10 +28,17 @@ export const grafito = () => new MeshStandardMaterial({ color: 0x23262b, roughne
 
 /** Canto frontal: apagado (#8a9099, sin emisión) o ámbar emitiendo; uno por placa. */
 export const canto = () =>
-  new MeshStandardMaterial({ color: APAGADO.clone(), emissive: AMBAR, roughness: 0.4, metalness: 0 });
+  new MeshStandardMaterial({ color: APAGADO.clone(), emissive: AMBAR.dark.clone(), roughness: 0.4, metalness: 0 });
 
 /** Aplica el nivel de emisión `e` (0 apagado … 1 encendido, ya con easing) al canto. */
 export function encender(material: MeshStandardMaterial, e: number, tema: StackTheme) {
-  material.color.lerpColors(APAGADO, AMBAR, e);
-  material.emissiveIntensity = INTENSIDAD[tema] * e;
+  material.color.lerpColors(APAGADO, NEGRO, e);
+  material.emissive.copy(AMBAR[tema]);
+  material.emissiveIntensity = e;
+  // Solo el canto encendido sale del tone mapping; apagado se comporta como el resto de la pila.
+  const fuera = e > 0.5;
+  if (material.toneMapped === fuera) {
+    material.toneMapped = !fuera;
+    material.needsUpdate = true;
+  }
 }

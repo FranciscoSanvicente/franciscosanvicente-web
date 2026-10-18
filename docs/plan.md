@@ -31,21 +31,23 @@ Las magnitudes son de nivel proyecto (aproximadas, sin desglose en horas).
 - [ ] Conectar el repo en Cloudflare Pages (lo hace Francisco desde su panel).
 
 ### Fase 1 — contenido y SEO, sin 3D · mediana · publicable al terminar
-- [ ] Secciones en HTML: hero, qué construyo, trayectoria, cómo pienso, contacto.
-- [ ] Title, meta description, canonical, Open Graph y Twitter card.
-- [ ] JSON-LD `Person` (nombre, cargo, Sumari como organización, Puerto Ordaz, correo, `sameAs`).
-- [ ] robots, sitemap, 404 e imagen OG generada en el build.
-- [ ] Publicación en `.pages.dev`.
+- [x] Secciones en HTML: hero, qué construyo, trayectoria, cómo pienso, contacto.
+- [x] Title, meta description, canonical, Open Graph y Twitter card.
+- [x] JSON-LD `Person` (nombre, cargo, Sumari como organización, Puerto Ordaz, correo, `sameAs`).
+- [x] robots, sitemap, 404 e imagen OG (`pnpm og`).
+- [ ] Publicación en `.pages.dev` (la conecta Francisco; ver README → Lanzamiento).
 
 ### Fase 2 — la pila 3D · grande
-- [ ] Geometría procedural en three.js (glTF solo si el acabado lo exige).
-- [ ] Detección de capacidad, carga diferida y corte si el render se atasca.
-- [ ] Giro lento en el hero; en "Trayectoria", pila fija y placas que encajan con el scroll nativo.
-- [ ] Imagen fija generada desde la escena.
+- [x] Geometría procedural en three.js, sin glTF.
+- [x] Detección de capacidad, carga diferida y corte si el render se atasca.
+- [x] Giro lento en el hero; en "Trayectoria", pila fija y placas que encajan con el scroll nativo.
+- [x] Imagen fija generada desde la escena (`pnpm poster`).
 
 ### Fase 3 — verificación · pequeña
-- [ ] Capturas móvil y escritorio, ambos temas, con una pasada de corrección.
-- [ ] axe, Lighthouse contra presupuestos y prueba de resultados enriquecidos.
+- [x] Capturas móvil y escritorio, ambos temas, con una pasada de corrección.
+- [x] axe y presupuestos con `pnpm audit` (laboratorio, 2026-10-17): LCP 1,5 s móvil / 1,0 s
+  escritorio, CLS 0,005, JS inicial 2,7 KB, escena 137 KB, 0 violaciones WCAG A/AA en ambos temas.
+- [ ] Prueba de resultados enriquecidos: necesita la URL pública (fase 4).
 
 ### Fase 4 — lanzamiento · pequeña
 - [ ] Comprar `franciscosanvicente.com` en Cloudflare y conectarlo a Pages.
@@ -54,6 +56,8 @@ Las magnitudes son de nivel proyecto (aproximadas, sin desglose en horas).
 - [ ] Enlace a la web en la bio de cada red.
 
 ## Pendiente de Francisco
+
+- Revisar el borrador de "Cómo pienso" (`src/components/Principios.astro`).
 
 - Foto (no bloquea la fase 1).
 - Usuario de redes: `@fransanvicente`; alternativas `@sanvicentefco`, `@fsanvicentedev`.

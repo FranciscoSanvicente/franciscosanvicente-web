@@ -4,6 +4,9 @@
 
 export const perfil = {
   nombre: 'Francisco Sanvicente',
+  /** Partes del nombre para `profile:first_name/last_name` y la tarjeta OG (no se parte `nombre`). */
+  nombrePila: 'Francisco',
+  apellidos: 'Sanvicente',
   rol: 'Fundador de Sumari',
   /** Línea del hero, debajo del nombre. */
   lede: 'Fundador de Sumari. Construyo finanzas para quien vive en varias monedas.',
@@ -16,6 +19,8 @@ export const perfil = {
   pais: 'Venezuela',
   paisCodigo: 'VE',
   correo: 'franciscosanvicente1@gmail.com',
+  /** Temas del `knowsAbout` del JSON-LD: solo lo que Francisco hace de verdad. */
+  temas: ['Desarrollo web', 'Desarrollo de aplicaciones móviles', 'Finanzas personales'],
   /** Foto de retrato desde la raíz pública (ej. '/foto.jpg'). Vacía hasta que Francisco la entregue. */
   foto: '',
 } as const;
@@ -26,6 +31,9 @@ export const sumari = {
   urlVisible: 'sumariapp.com',
   descripcion:
     'App de finanzas personales que reúne bolívares, dólares, USDT y euros en un solo total a la tasa del día.',
+  /** Texto del bloque "Qué construyo", en primera persona. */
+  intro:
+    'Estoy construyendo Sumari, una app de finanzas personales que reúne bolívares, dólares, USDT y euros en un solo total a la tasa del día. La hago para la forma en que la gente en Venezuela maneja de verdad su dinero.',
   estado: 'En desarrollo · Google Play y App Store, próximamente',
 } as const;
 

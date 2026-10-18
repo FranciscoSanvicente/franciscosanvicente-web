@@ -6,9 +6,6 @@
    La suma se lee de dos maneras: a la vista, como una ecuación; para lectores de pantalla, como una
    frase (la ecuación va con aria-hidden y una frase sr-only la sustituye). */
 import { sumari } from '../data/perfil';
-
-// La descripción de perfil.ts es una frase suelta ("App de…"); aquí sigue a "Sumari, una".
-const descripcion = sumari.descripcion.charAt(0).toLowerCase() + sumari.descripcion.slice(1);
 ---
 
 <section id="sumari" class="section" aria-labelledby="h-sumari">
@@ -18,10 +15,7 @@ const descripcion = sumari.descripcion.charAt(0).toLowerCase() + sumari.descripc
   </div>
 
   <div class="sumari reveal" style="--reveal-i: 1">
-    <p class="t-body sumari__texto">
-      Estoy construyendo {sumari.nombre}, una {descripcion} La hago para la forma en que la gente en Venezuela
-      maneja de verdad su dinero.
-    </p>
+    <p class="t-body sumari__texto">{sumari.intro}</p>
 
     <p class="sumari__sum">
       <span class="sr-only">Bolívares, dólares, USDT y euros suman el total del día.</span>

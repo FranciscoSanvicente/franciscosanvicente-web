@@ -21,3 +21,6 @@ Thumbs.db
 
 # Capturas locales de revisión
 shots/
+
+# Worktrees de agentes paralelos
+.claude/worktrees/
