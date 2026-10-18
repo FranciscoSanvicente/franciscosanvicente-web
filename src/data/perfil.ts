@@ -81,4 +81,22 @@ export const hitos: Hito[] = [
   { n: 4, anio: 'Próximamente', titulo: 'Lanzamiento de Sumari', detalle: 'En Google Play y App Store.' },
 ];
 
+export interface Grupo {
+  grupo: string;
+  tecnologias: string[];
+}
+
+/* Tecnologías que Francisco domina, por área, en el orden en que se muestran (Móvil va segundo
+   porque enlaza con Sumari). Las leen la sección "Con qué construyo" y el `knowsAbout` del JSON-LD.
+   Solo lo que él confirmó; sin niveles ni porcentajes. */
+export const stack: Grupo[] = [
+  { grupo: 'Lenguajes', tecnologias: ['TypeScript', 'JavaScript'] },
+  { grupo: 'Móvil', tecnologias: ['React Native', 'Expo'] },
+  { grupo: 'Frontend', tecnologias: ['React', 'Next.js', 'Astro'] },
+  { grupo: 'Backend', tecnologias: ['Node.js', 'Express', 'NestJS'] },
+  { grupo: 'Datos', tecnologias: ['PostgreSQL', 'Supabase', 'MongoDB', 'MySQL'] },
+  { grupo: 'Nube', tecnologias: ['Firebase', 'Docker', 'AWS', 'Google Cloud'] },
+  { grupo: 'Estilos', tecnologias: ['Tailwind CSS', 'Sass'] },
+];
+
 export const anioActual = 2026;

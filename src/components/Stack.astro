@@ -1,0 +1,99 @@
+---
+/* "Con qué construyo": las tecnologías que Francisco domina, por área (datos en perfil.ts).
+   Composición validada por ux-architect: tabla densa a todo el ancho, para que no se lea como una
+   repetición de "Cómo pienso", que va justo después con cabecera fija y lista aireada. Cierra con
+   regla abajo (Principios queda abierta). Sin logos, porcentajes ni píldoras (handoff §7): el orden
+   de los grupos da la jerarquía y ninguno se destaca. */
+import { stack } from '../data/perfil';
+---
+
+<section id="stack" class="section container" aria-labelledby="h-stack">
+  <div class="section-head reveal">
+    <p class="eyebrow">capa 03</p>
+    <h2 id="h-stack" class="t-h2">Con qué construyo</h2>
+  </div>
+
+  <dl class="stack reveal" style="--reveal-i: 1">
+    {
+      stack.map((g) => (
+        <div class="stack__fila">
+          <dt class="eyebrow">{g.grupo}</dt>
+          <dd class="t-h3 stack__tecnologias">
+            {g.tecnologias.map((t, i) => (
+              <>
+                {i > 0 && (
+                  <span class="stack__sep" aria-hidden="true">
+                    {' · '}
+                  </span>
+                )}
+                <span class="stack__tec">{t}</span>
+              </>
+            ))}
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+</section>
+
+<style>
+  .stack {
+    margin: 0;
+  }
+
+  .stack__fila {
+    display: grid;
+    gap: var(--s-2);
+    align-items: baseline;
+    padding-block: var(--s-4);
+    border-top: 1px solid var(--border);
+  }
+
+  .stack__fila:last-child {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .stack__tecnologias {
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  /* Una tecnología nunca se parte entre líneas ("React Native", "Google Cloud"). */
+  .stack__tec {
+    white-space: nowrap;
+  }
+
+  .stack__sep {
+    color: var(--ink4);
+  }
+
+  @media (min-width: 48rem) {
+    .stack__fila {
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      column-gap: 20px;
+    }
+
+    .stack__fila dt {
+      grid-column: 1 / span 2;
+    }
+
+    .stack__tecnologias {
+      grid-column: 3 / -1;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .stack__fila {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: 24px;
+    }
+
+    .stack__fila dt {
+      grid-column: 1 / span 3;
+    }
+
+    .stack__tecnologias {
+      grid-column: 4 / -1;
+    }
+  }
+</style>

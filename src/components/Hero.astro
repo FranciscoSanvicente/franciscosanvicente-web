@@ -2,7 +2,9 @@
 /* Hero (docs/design/handoff.md §4). El nombre domina la primera lectura y es el LCP, por eso el H1
    nunca lleva `.reveal`: tiene que pintarse con el primer render. Solo se revelan lede y redes.
    Desde 64rem la pila la pinta el Stage en su columna; por debajo el Hero lleva su propio póster
-   bajo las redes, perezoso (handoff §1): es decorativo y no debe adelantarse al texto. */
+   bajo las redes. No es perezoso: en móvil cae en la primera pantalla y es el LCP, y con `lazy` el
+   navegador lo pedía tarde (medido con pnpm audit). Pesa ~11 KB y es el mismo archivo que el
+   póster del Stage, así que en escritorio sale de caché. */
 import Redes from './Redes.astro';
 import { perfil, redes } from '../data/perfil';
 ---
@@ -20,7 +22,7 @@ import { perfil, redes } from '../data/perfil';
   }
   <picture class="hero__poster">
     <source srcset="/poster/pila.avif" type="image/avif" />
-    <img src="/poster/pila.webp" width="960" height="960" alt="" loading="lazy" decoding="async" />
+    <img src="/poster/pila.webp" width="960" height="960" alt="" decoding="async" />
   </picture>
 </section>
 

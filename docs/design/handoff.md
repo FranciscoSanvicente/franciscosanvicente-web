@@ -63,8 +63,8 @@ La suma de Sumari usa `.t-figure` con tope de 2.5rem.
 - Escala: `--s-1: 4px` `--s-2: 8px` `--s-3: 12px` `--s-4: 16px` `--s-5: 24px` `--s-6: 32px`
   `--s-7: 48px` `--s-8: 64px` `--s-9: 96px` `--s-10: 128px`.
 - Entre secciones: `--section-y: clamp(5rem, 3rem + 8vw, 10rem)` como `padding-block`.
-- `.section-head`: `.eyebrow` con **"capa 01"…"capa 04"** (Sumari, Trayectoria, Principios,
-  Contacto) → `--s-3` → H2 → `--s-7` hasta el contenido. El eyebrow numera capas, no repite el H2.
+- `.section-head`: `.eyebrow` con **"capa 01"…"capa 05"** (Sumari, Trayectoria, Con qué
+  construyo, Principios, Contacto) → `--s-3` → H2 → `--s-7` hasta el contenido. El eyebrow numera capas, no repite el H2.
   El Hero no lleva eyebrow.
 
 ## 4. Secciones

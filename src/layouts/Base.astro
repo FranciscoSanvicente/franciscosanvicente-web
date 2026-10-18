@@ -5,7 +5,7 @@ import '@fontsource-variable/space-grotesk';
 import '../styles/global.css';
 // El nombre en Bricolage es el LCP: se precarga solo su archivo latino.
 import displayFont from '@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2?url';
-import { perfil, sumari, redes } from '../data/perfil';
+import { perfil, sumari, redes, stack } from '../data/perfil';
 
 interface Props {
   title: string;
@@ -62,7 +62,7 @@ const jsonLd = {
         addressCountry: perfil.paisCodigo,
       },
       worksFor: { '@type': 'Organization', name: sumari.nombre, url: sumari.url },
-      knowsAbout: perfil.temas,
+      knowsAbout: [...perfil.temas, ...stack.flatMap((g) => g.tecnologias)],
       sameAs: redes.map((r) => r.url),
       ...(perfil.foto ? { image: new URL(perfil.foto, site).href } : {}),
     },

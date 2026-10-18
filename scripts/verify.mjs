@@ -24,7 +24,7 @@ check(/<title>[^<]*Francisco Sanvicente[^<]*<\/title>/.test(html), 'el <title> n
 check(/<meta name="description" content="[^"]*Francisco Sanvicente/.test(html) || /<meta name="description" content="[^"]{50,}"/.test(html), 'falta meta description');
 check(/<link rel="canonical" href="https?:\/\/[^"]+"/.test(html), 'falta la URL canónica absoluta');
 check(/<main\b[^>]*\bid="contenido"/.test(html), 'falta <main id="contenido">');
-for (const id of ['sumari', 'trayectoria', 'principios', 'contacto']) {
+for (const id of ['sumari', 'trayectoria', 'stack', 'principios', 'contacto']) {
   check(new RegExp(`\\sid="${id}"`).test(html), `falta la sección #${id}`);
 }
 for (const n of [1, 2, 3, 4]) {
