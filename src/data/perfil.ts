@@ -97,7 +97,7 @@ export const stack: Grupo[] = [
   { grupo: 'Frontend', tecnologias: ['React', 'Next.js', 'Astro'] },
   { grupo: 'Backend', tecnologias: ['Node.js', 'Express', 'NestJS'] },
   { grupo: 'Datos', tecnologias: ['PostgreSQL', 'MongoDB', 'MySQL'] },
-  { grupo: 'Nube y despliegue', tecnologias: ['Docker', 'AWS', 'Google Cloud', 'Firebase'] },
+  { grupo: 'Nube y despliegue', tecnologias: ['Docker', 'AWS', 'Google Cloud', 'Firebase', 'Supabase'] },
   { grupo: 'Estilos', tecnologias: ['Tailwind CSS', 'Sass'] },
 ];
 
