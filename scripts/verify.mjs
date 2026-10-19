@@ -85,6 +85,7 @@ check(await existe('public/og/default.png'), 'falta public/og/default.png (pnpm 
 // ── Persona para buscadores e IA: ProfilePage, fundador de Sumari, bio visible, llms.txt, robots ──
 const pagina = grafo.find((n) => n['@type'] === 'ProfilePage');
 check(pagina?.mainEntity?.['@id'] === persona?.['@id'], 'falta ProfilePage con mainEntity = Person');
+check(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/.test(pagina?.dateModified ?? ''), 'dateModified debe ser fecha y hora ISO con zona');
 check(
   grafo.some((n) => n['@type'] === 'Organization' && n.founder?.['@id'] === persona?.['@id']),
   'Sumari no declara a Francisco como founder',

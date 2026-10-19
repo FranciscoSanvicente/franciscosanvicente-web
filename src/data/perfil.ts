@@ -25,8 +25,9 @@ export const perfil = {
     'Soy Francisco Sanvicente, ingeniero de software en Puerto Ordaz, Venezuela, y creador de Sumari. Construyo apps móviles, web y backend.',
   /** Otros nombres con los que se le conoce (`alternateName`). Vacío hasta que Francisco lo confirme. */
   alias: [] as string[],
-  /** Última revisión del contenido (dateModified del JSON-LD). Actualizar al cambiar textos. */
-  actualizado: '2026-10-17',
+  /** Última revisión del contenido (dateModified del JSON-LD), en ISO 8601 con hora y zona horaria
+      de Venezuela (−04:00): Google marca como no válida una fecha sin hora. Actualizar al cambiar textos. */
+  actualizado: '2026-10-18T00:00:00-04:00',
   ciudad: 'Puerto Ordaz',
   region: 'Bolívar',
   pais: 'Venezuela',
