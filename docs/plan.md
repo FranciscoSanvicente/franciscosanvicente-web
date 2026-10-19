@@ -50,7 +50,8 @@ Las magnitudes son de nivel proyecto (aproximadas, sin desglose en horas).
 - [ ] Prueba de resultados enriquecidos: necesita la URL pública (fase 4).
 
 ### Fase 4 — lanzamiento · pequeña
-- [ ] Comprar `franciscosanvicente.com` en Cloudflare y conectarlo a Pages.
+- [x] Comprar `franciscosanvicente.com` en Cloudflare (2026-10-18, renovación automática).
+- [ ] Conectarlo a Pages.
 - [ ] Redirigir `.pages.dev` al dominio.
 - [ ] Verificar el dominio en Search Console y enviar el sitemap.
 - [ ] Enlace a la web en la bio de cada red.
