@@ -28,8 +28,10 @@ export const perfil = {
   correo: 'franciscosanvicente1@gmail.com',
   /** Temas del `knowsAbout` del JSON-LD: solo lo que Francisco hace de verdad. */
   temas: ['Desarrollo web', 'Desarrollo de aplicaciones móviles', 'Finanzas personales'],
-  /** Foto de retrato desde la raíz pública (ej. '/foto.jpg'). Vacía hasta que Francisco la entregue. */
-  foto: '',
+  /** Foto oficial cuadrada (1200×1200) para el JSON-LD; la misma de los avatares. `pnpm fotos`. */
+  foto: '/foto/francisco-sanvicente.jpg',
+  /** Retrato vertical 4:5 que se ve junto a la bio: base de /foto/retrato-{480,800}.{avif,webp}. */
+  retrato: '/foto/retrato',
 } as const;
 
 export const sumari = {

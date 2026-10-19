@@ -90,6 +90,8 @@ check(
   'Sumari no declara a Francisco como founder',
 );
 check(/Francisco Sanvicente es /.test(visible), 'la bio larga no está en el HTML');
+check(/^https:\/\/.+\.jpg$/.test(persona?.image ?? ''), 'el Person no tiene foto (image) absoluta');
+check(/alt="Retrato de Francisco Sanvicente"/.test(html), 'falta el retrato visible con su alt');
 const llms = await leer('dist/llms.txt');
 check(llms?.startsWith('# Francisco Sanvicente') ?? false, 'falta dist/llms.txt');
 const robots = await leer('dist/robots.txt');

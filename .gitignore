@@ -24,3 +24,6 @@ shots/
 
 # Worktrees de agentes paralelos
 .claude/worktrees/
+
+# Fotos originales (pueden llevar EXIF con ubicación): solo se suben las versiones de pnpm fotos
+fotos-originales/

@@ -17,8 +17,27 @@ import Glifo from './Glifo.astro';
     <p class="eyebrow" aria-hidden="true">capa 03</p>
     <h2 id="h-trayectoria" class="t-h2">Trayectoria</h2>
   </div>
-  {/* La bio en prosa y en tercera persona: es lo que citan buscadores y asistentes de IA. */}
-  <p class="t-body trayectoria__bio">{perfil.bioLarga}</p>
+  {/* Retrato y bio en prosa, en tercera persona: es lo que citan buscadores y asistentes de IA. */}
+  <div class="trayectoria__intro">
+    <picture class="trayectoria__retrato">
+      <source
+        type="image/avif"
+        srcset={`${perfil.retrato}-480.avif 480w, ${perfil.retrato}-800.avif 800w`}
+        sizes="(min-width: 48rem) 200px, 48vw"
+      />
+      <img
+        src={`${perfil.retrato}-480.webp`}
+        srcset={`${perfil.retrato}-480.webp 480w, ${perfil.retrato}-800.webp 800w`}
+        sizes="(min-width: 48rem) 200px, 48vw"
+        width="480"
+        height="600"
+        alt={`Retrato de ${perfil.nombre}`}
+        loading="lazy"
+        decoding="async"
+      />
+    </picture>
+    <p class="t-body trayectoria__bio">{perfil.bioLarga}</p>
+  </div>
   <ol class="hitos" role="list">
     {
       hitos.map((h) => (
@@ -37,11 +56,43 @@ import Glifo from './Glifo.astro';
 </section>
 
 <style>
+  .trayectoria__intro {
+    display: grid;
+    gap: var(--s-5);
+    align-items: start;
+    margin-bottom: var(--s-8);
+  }
+
+  .trayectoria__retrato {
+    width: min(48vw, 200px);
+  }
+
+  .trayectoria__retrato img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+  }
+
   .trayectoria__bio {
     max-width: 65ch;
-    margin-bottom: var(--s-8);
     color: var(--ink2);
     text-wrap: pretty;
+  }
+
+  /* Desde tableta: retrato a la izquierda, bio a su lado. */
+  @media (min-width: 48rem) {
+    .trayectoria__intro {
+      grid-template-columns: 200px 1fr;
+      gap: var(--s-6);
+    }
+
+    .trayectoria__retrato {
+      width: 200px;
+    }
   }
 
   .hitos {
