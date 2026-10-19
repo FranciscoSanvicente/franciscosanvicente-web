@@ -12,7 +12,8 @@ import sharp from 'sharp';
 import { mkdir, stat } from 'node:fs/promises';
 
 const BASE = process.env.OG_BASE || 'http://localhost:4321';
-const SHOTS = [['/og-card', 'public/og/default.png']];
+// Al regenerar con cambios visibles, sube la versión aquí y en Base.astro (las redes cachean por URL).
+const SHOTS = [['/og-card', 'public/og/francisco-sanvicente-v2.png']];
 
 await mkdir('public/og', { recursive: true });
 

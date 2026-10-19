@@ -33,7 +33,9 @@ const canonicalURL = new URL(path, site).href;
 const {
   title,
   description,
-  image = '/og/default.png',
+  // Versionada en el nombre: LinkedIn, WhatsApp y X guardan la imagen por URL durante días; al
+  // regenerarla (`pnpm og`) se sube el número para que la vuelvan a descargar.
+  image = '/og/francisco-sanvicente-v2.png',
   // Solo la inicial del rol en minúscula: "Sumari" conserva su mayúscula.
   imageAlt = `${perfil.nombre}, ${perfil.rol.charAt(0).toLowerCase()}${perfil.rol.slice(1)}. ${perfil.ciudad}, ${perfil.pais}.`,
   ogType = path === '/' ? 'profile' : 'website',

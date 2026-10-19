@@ -24,7 +24,7 @@ pnpm preview   # sirve dist/ para revisar el build
 pnpm test      # comprueba dist/: un solo H1, SEO, JSON-LD, noindex, sitemap
 pnpm shots     # capturas 375/1280 en oscuro, claro y movimiento reducido (con preview en marcha)
 pnpm audit     # LCP, CLS, peso y axe contra los presupuestos (con preview en marcha)
-pnpm og        # regenera public/og/default.png desde /og-card (con dev o preview en marcha)
+pnpm og        # regenera la imagen OG desde /og-card (versionada en el nombre: ver scripts/og.mjs)
 pnpm poster    # regenera el póster de la pila desde la escena 3D
 pnpm icons     # regenera los PNG de los íconos desde public/favicon.svg
 ```

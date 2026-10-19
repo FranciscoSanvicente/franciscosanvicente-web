@@ -80,7 +80,7 @@ const sitemap = await leer('dist/sitemap-0.xml');
 check(sitemap !== null, 'no se generó dist/sitemap-0.xml');
 check(!/og-card|\/404/.test(sitemap ?? ''),'el sitemap incluye og-card o la 404');
 const existe = (r) => access(new URL(`../${r}`, import.meta.url)).then(() => true, () => false);
-check(await existe('public/og/default.png'), 'falta public/og/default.png (pnpm og)');
+check(await existe('public/og/francisco-sanvicente-v2.png'), 'falta la imagen OG (pnpm og)');
 
 // ── Persona para buscadores e IA: ProfilePage, fundador de Sumari, bio visible, llms.txt, robots ──
 const pagina = grafo.find((n) => n['@type'] === 'ProfilePage');
