@@ -64,14 +64,16 @@ import { perfil, redes } from '../data/perfil';
     max-width: 100%;
   }
 
-  /* Velo: solo cuando hay escenario detrás. En retrato, a todo el ancho de la ventana. */
+  /* Velo: solo cuando hay escenario detrás. En retrato, a todo el ancho de la ventana y opaco: si la
+     pila baja hasta el nombre (teléfono bajo, texto ampliado), con un velo translúcido su base se veía
+     como un rectángulo fantasma detrás de «Francisco». Opaco, la pila se funde antes del nombre. */
   :global(html.js:not(.lite)) .hero__texto::before {
     content: '';
     position: absolute;
     inset: -3rem auto calc(-1 * var(--s-8)) calc(-1 * var(--gutter));
     width: 100vw;
     z-index: -1;
-    background: linear-gradient(to bottom, transparent, var(--scrim) 3rem);
+    background: linear-gradient(to bottom, transparent, var(--bg) 3rem);
   }
 
   /* Póster propio solo sin escenario (sin JS o modo ligero). */

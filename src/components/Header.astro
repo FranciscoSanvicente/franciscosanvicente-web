@@ -99,7 +99,7 @@ const secciones = [
     color: var(--ink);
   }
 
-  /* Botón de icono de 44 px: no fuerza una segunda línea en la cabecera de un móvil. */
+  /* Botón de icono de 44 px: en escritorio, a la derecha del nav. */
   .header__pausa {
     display: inline-grid;
     place-items: center;
@@ -129,6 +129,32 @@ const secciones = [
 
   .header__pausa[aria-pressed='true'] .pausa__play {
     display: inline;
+  }
+
+  /* Móvil: el lugar está oculto, así que el botón ocupa ese hueco a la izquierda, en la misma fila
+     que el nav. La fila no se parte nunca: si el nav no cabe (pantalla angosta o texto del sistema
+     ampliado), se reacomodan sus enlaces a la derecha y el botón se queda donde está. */
+  @media (max-width: 47.99rem) {
+    .header {
+      flex-wrap: nowrap;
+      align-items: flex-start;
+    }
+
+    .header__pausa {
+      order: -1;
+      flex: none;
+      margin-inline: -14px 0;
+    }
+
+    .header__nav {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .header__nav ul {
+      justify-content: flex-end;
+      column-gap: var(--s-3);
+    }
   }
 
   /* Si el modo ligero llega después (la escena no pudo cargar), el botón ya no tiene sentido. */
