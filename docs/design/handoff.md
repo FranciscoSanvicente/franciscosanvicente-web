@@ -19,7 +19,7 @@ y que el 3D acompañe toda la página, también en móvil. Esta sección **susti
 `.stage` y su columna sticky ya no existen), al orden de §3/§4 y a la coreografía de §5. Lo demás
 (tipografía, espaciado, §6, §7) sigue vigente.
 
-- **Identidad:** "Ingeniero de software" bajo el nombre; Sumari pasa a ser "Sumari, mi producto".
+- **Identidad:** "Desarrollador de software" bajo el nombre (2026-10-18: no "Ingeniero", porque aún no tiene el título); Sumari pasa a ser "Sumari, mi producto".
 - **Orden:** Hero → Servicios (capa 01) → Sumari (02) → Trayectoria (03) → Con qué construyo (04)
   → Cómo pienso (05) → Contacto (06). Nav: Servicios · Sumari · Trayectoria · Contacto.
 - **Escenario:** una capa fija a pantalla completa (`Escenario.astro`, 100lvh, z 0, sin eventos)
