@@ -26,7 +26,8 @@ export const GET: APIRoute = ({ site }) => {
     '',
     '## Trayectoria',
     '',
-    ...hitos.map((h) => `- ${h.anio}: ${h.titulo}.${h.detalle ? ` ${h.detalle}` : ''}`),
+    // Los hitos están escritos en primera persona (así se leen en la página): van como cita de él.
+    ...hitos.map((h) => `- ${h.anio}: «${h.titulo}».${h.detalle ? ` ${h.detalle}` : ''}`),
     '',
     '## Tecnologías',
     '',

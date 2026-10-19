@@ -89,7 +89,7 @@ check(
   grafo.some((n) => n['@type'] === 'Organization' && n.founder?.['@id'] === persona?.['@id']),
   'Sumari no declara a Francisco como founder',
 );
-check(/Francisco Sanvicente es /.test(visible), 'la bio larga no está en el HTML');
+check(/Soy Francisco Sanvicente, /.test(visible), 'la bio (primera persona, con el nombre) no está en el HTML');
 check(/^https:\/\/.+\.jpg$/.test(persona?.image ?? ''), 'el Person no tiene foto (image) absoluta');
 check(/alt="Retrato de Francisco Sanvicente"/.test(html), 'falta el retrato visible con su alt');
 const llms = await leer('dist/llms.txt');

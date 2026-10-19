@@ -17,7 +17,8 @@ import Glifo from './Glifo.astro';
     <p class="eyebrow" aria-hidden="true">capa 03</p>
     <h2 id="h-trayectoria" class="t-h2">Trayectoria</h2>
   </div>
-  {/* Retrato y bio en prosa, en tercera persona: es lo que citan buscadores y asistentes de IA. */}
+  {/* Retrato y bio en prosa, en primera persona y con el nombre completo: es la frase que citan
+      buscadores y asistentes de IA (la versión en tercera persona va en el JSON-LD y en llms.txt). */}
   <div class="trayectoria__intro">
     <picture class="trayectoria__retrato">
       <source
@@ -36,7 +37,7 @@ import Glifo from './Glifo.astro';
         decoding="async"
       />
     </picture>
-    <p class="t-body trayectoria__bio">{perfil.bioLarga}</p>
+    <p class="t-body trayectoria__bio">{perfil.bio}</p>
   </div>
   <ol class="hitos" role="list">
     {
