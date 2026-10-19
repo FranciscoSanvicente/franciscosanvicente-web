@@ -45,7 +45,7 @@ const {
 const imageURL = new URL(image, site).href;
 
 // Datos estructurados (ProfilePage → Person → Organization Sumari + WebSite): src/data/jsonld.ts.
-const jsonLd = grafoPerfil({ site, canonical: canonicalURL, title, description, imagen: imageURL });
+const jsonLd = grafoPerfil({ site, canonical: canonicalURL, title, imagen: imageURL });
 const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
 ---
 

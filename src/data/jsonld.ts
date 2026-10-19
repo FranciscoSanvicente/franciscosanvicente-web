@@ -2,6 +2,8 @@
    (Sumari), más el WebSite. Todo sale de perfil.ts, igual que el HTML y llms.txt.
 
    - ProfilePage es el tipo que Google recomienda para páginas de perfil de una persona.
+   - Las descripciones van en tercera persona: son fichas que describen a la entidad desde fuera
+     (la página, en cambio, habla en primera persona).
    - El @id de Sumari es el MISMO que publica sumariapp.com (`/#organization`): así los buscadores
      unen las dos webs en una sola entidad, con Francisco como fundador.
    - La foto (`image`) entra sola cuando `perfil.foto` tenga una ruta; la tarjeta OG no es un
@@ -12,11 +14,10 @@ interface Pagina {
   site: URL;
   canonical: string;
   title: string;
-  description: string;
   imagen: string;
 }
 
-export function grafoPerfil({ site, canonical, title, description, imagen }: Pagina) {
+export function grafoPerfil({ site, canonical, title, imagen }: Pagina) {
   const personaId = `${site.href}#persona`;
   const webId = `${site.href}#web`;
   const sumariId = `${new URL(sumari.url).origin}/#organization`;
@@ -28,7 +29,7 @@ export function grafoPerfil({ site, canonical, title, description, imagen }: Pag
         '@id': `${canonical}#pagina`,
         url: canonical,
         name: title,
-        description,
+        description: perfil.descripcionTercera,
         inLanguage: 'es',
         isPartOf: { '@id': webId },
         mainEntity: { '@id': personaId },

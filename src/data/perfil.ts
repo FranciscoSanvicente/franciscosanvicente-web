@@ -16,6 +16,9 @@ export const perfil = {
       describen a la persona desde fuera. */
   bioLarga:
     'Francisco Sanvicente es un ingeniero de software venezolano, de Puerto Ordaz, con seis años construyendo productos web y móviles. Ha trabajado como full stack en equipos de producto, encargándose tanto de la interfaz como del backend que la sostiene. En 2026 fundó Sumari, una app de finanzas personales que reúne bolívares, dólares, USDT y euros en un solo total a la tasa del día, hecha para la forma en que la gente en Venezuela maneja de verdad su dinero.',
+  /** La descripción en tercera persona, para la ficha de la página en el JSON-LD (ProfilePage). */
+  descripcionTercera:
+    'Francisco Sanvicente es ingeniero de software en Puerto Ordaz, Venezuela, y creador de Sumari. Construye apps móviles, web y backend con React Native y Node.js.',
   /** Meta description y og:description (el texto bajo el enlace en Google y al compartir): primera
       persona, como el resto de la página, con el nombre completo; ≤ 160 caracteres. */
   descripcion:
@@ -75,16 +78,21 @@ export interface Hito {
   /** 1 = base de la pila … 4 = placa superior. Coincide con `data-hito` y con la escena 3D. */
   n: 1 | 2 | 3 | 4;
   anio: string;
+  /** Como se lee en la página: primera persona. */
   titulo: string;
+  /** El mismo hito en tercera persona y sin sujeto, para llms.txt, donde cada frase lleva el nombre
+      delante y se entiende sola aunque un asistente la cite fuera de contexto. */
+  tercera: string;
   detalle?: string;
 }
 
 export const hitos: Hito[] = [
-  { n: 1, anio: '2020', titulo: 'Empecé a programar', detalle: 'Primeras aplicaciones web y proyectos personales.' },
+  { n: 1, anio: '2020', titulo: 'Empecé a programar', tercera: 'empezó a programar', detalle: 'Primeras aplicaciones web y proyectos personales.' },
   {
     n: 2,
     anio: '2020–2026',
     titulo: 'Desarrollador full stack',
+    tercera: 'trabajó como desarrollador full stack',
     detalle:
       'Seis años en equipos de producto, construyendo aplicaciones web y móviles de punta a punta. Proyectos de clientes y empleadores, bajo confidencialidad.',
   },
@@ -92,9 +100,10 @@ export const hitos: Hito[] = [
     n: 3,
     anio: '2026',
     titulo: 'Fundé Sumari',
+    tercera: 'fundó Sumari',
     detalle: 'Finanzas personales para quien maneja su dinero en bolívares, dólares, USDT y euros.',
   },
-  { n: 4, anio: '2026', titulo: 'Lancé Sumari en Google Play', detalle: 'Disponible en Android; la versión para iPhone, próximamente.' },
+  { n: 4, anio: '2026', titulo: 'Lancé Sumari en Google Play', tercera: 'lanzó Sumari en Google Play', detalle: 'Disponible en Android; la versión para iPhone, próximamente.' },
 ];
 
 export interface Grupo {
