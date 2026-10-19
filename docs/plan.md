@@ -49,23 +49,26 @@ Las magnitudes son de nivel proyecto (aproximadas, sin desglose en horas).
   escritorio, CLS 0,005, JS inicial 2,7 KB, escena 137 KB, 0 violaciones WCAG A/AA en ambos temas.
 - [ ] Prueba de resultados enriquecidos: necesita la URL pública (fase 4).
 
-### Fase 4 — lanzamiento · pequeña
-- [x] Comprar `franciscosanvicente.com` en Cloudflare (2026-10-18, renovación automática).
-- [ ] Conectarlo a Pages.
-- [ ] Redirigir `.pages.dev` al dominio.
-- [ ] Verificar el dominio en Search Console y enviar el sitemap.
-- [ ] Enlace a la web en la bio de cada red.
+### Fase 4 — lanzamiento · hecha (2026-10-18)
+- [x] Comprar `franciscosanvicente.com` en Cloudflare (renovación automática, transferencia bloqueada).
+- [x] Proyecto en Cloudflare Pages conectado a GitHub; dominio y `www` activos con SSL.
+- [x] Redirecciones 301: `www` → dominio (Redirect Rule) y `.pages.dev` → dominio (Bulk Redirect).
+- [x] Seguridad: SSL Full (strict), HTTPS siempre, TLS ≥ 1.2, DNSSEC, SPF `-all` y DMARC `reject`.
+- [x] Bots de IA permitidos (búsqueda, agentes y entrenamiento); ofuscación de correo apagada.
+- [x] Search Console: dominio verificado, sitemap "Correcto", página de perfil válida, indexación pedida.
+- [x] Bing Webmaster: importado, sitemap "Success" y URL enviada.
+- [x] LinkedIn y GitHub con la misma foto, titular, ubicación y enlace a la web.
 
-## Pendiente de Francisco
+## Pendiente
 
-- Revisar el borrador de "Cómo pienso" (`src/components/Principios.astro`).
-- Foto de retrato cuadrada (~1200 px, idealmente la misma de LinkedIn/GitHub): entra en el JSON-LD.
-- Alias real si lo hay (`perfil.alias`, por ejemplo "fsanvicentedev").
-- Cloudflare (bots de IA, Crawler Hints), Bing Webmaster y el `founder` en sumariapp.com: README.
-
-- Foto (no bloquea la fase 1).
-- Usuario de redes: `@fransanvicente`; alternativas `@sanvicentefco`, `@fsanvicentedev`.
-- Trayectoria: cómo empezó en 2020 y si la fundación de Sumari es julio de 2026.
+- Instagram: enlace a la web en la bio y la misma foto.
+- sumariapp.com: `founder` → `https://franciscosanvicente.com/#persona` y enlace visible a esta web.
+- Probar la web en un Android real (fluidez de la pila 3D).
+- En 3–7 días: comprobar la indexación en Search Console y buscar "Francisco Sanvicente".
+- En una semana, si todo va bien: activar HSTS en Cloudflare.
+- Confirmar el texto de "Cómo pienso" (hoy marcado como borrador en `Principios.astro`).
+- Alias real si lo hay (`perfil.alias`).
+- Al graduarse: `perfil.rol` → "Ingeniero de software" (y regenerar la imagen OG con versión nueva).
 
 ## Textos aprobados como borrador
 
