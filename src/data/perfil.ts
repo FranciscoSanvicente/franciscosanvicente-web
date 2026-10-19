@@ -65,7 +65,7 @@ export interface Red {
 /* Redes en el orden en que se muestran. Una red sin URL no se pinta en ningún lado (ni en la página
    ni en el `sameAs` del JSON-LD): para añadirla basta con poner su URL aquí. */
 const REDES: Red[] = [
-  { nombre: 'LinkedIn', url: 'https://www.linkedin.com/in/francisco-sanvicente-147879408/' },
+  { nombre: 'LinkedIn', url: 'https://www.linkedin.com/in/francisco-sanvicente/' },
   { nombre: 'GitHub', url: 'https://github.com/FranciscoSanvicente' },
   { nombre: 'X', url: '' },
   { nombre: 'Instagram', url: 'https://www.instagram.com/fsanvicentedev/' },
